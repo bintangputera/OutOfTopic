@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "738621450785",
+    "project_id": "outoftopic-8df32",
+    "storage_bucket": "outoftopic-8df32.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:738621450785:android:fab45ee5d896f5937f9160",
+        "android_client_info": {
+          "package_name": "com.poetralabs.outoftopic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAb8Q79HfJF7AB2wKJGlVDoJTgUsGB3QU8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

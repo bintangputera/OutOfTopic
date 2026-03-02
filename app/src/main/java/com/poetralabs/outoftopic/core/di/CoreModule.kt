@@ -1,0 +1,59 @@
+package com.poetralabs.outoftopic.core.di
+
+import androidx.room.Room
+import com.poetralabs.outoftopic.core.data.local.room.AppDatabase
+import com.poetralabs.outoftopic.core.data.repository.QuestionRepositoryImpl
+import com.poetralabs.outoftopic.core.domain.repository.QuestionRepository
+import com.poetralabs.outoftopic.presentation.home.HomeViewModel
+import com.poetralabs.outoftopic.presentation.question.QuestionViewModel
+import com.google.firebase.analytics.FirebaseAnalytics
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.module
+
+val databaseModule = module {
+    single { FirebaseAnalytics.getInstance(androidContext()) }
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            AppDatabase::class.java,
+            "out_of_topic.db"
+        ).fallbackToDestructiveMigration().build()
+    }
+    single { get<AppDatabase>().questionDao() }
+}
+
+val networkModule = module {
+    single {
+        HttpClient(OkHttp) {
+            install(ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                    prettyPrint = true
+                    isLenient = true
+                })
+            }
+            install(Logging) {
+                level = LogLevel.ALL
+            }
+        }
+    }
+}
+
+val repositoryModule = module {
+    single<QuestionRepository> { QuestionRepositoryImpl(androidContext(), get(), get()) }
+}
+
+val viewModelModule = module {
+    viewModel { HomeViewModel(get(), get()) }
+    viewModel { QuestionViewModel(get()) }
+}
+
+val appModule = listOf(databaseModule, networkModule, repositoryModule, viewModelModule)

@@ -1,4 +1,4 @@
-package com.bintangpoetra.outoftopic
+package com.poetralabs.outoftopic
 
 import org.junit.Test
 
