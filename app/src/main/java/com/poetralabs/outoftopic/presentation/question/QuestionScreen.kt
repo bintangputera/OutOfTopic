@@ -1,21 +1,27 @@
 package com.poetralabs.outoftopic.presentation.question
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -33,14 +39,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import com.poetralabs.outoftopic.core.theme.BackgroundWhite
 import org.koin.androidx.compose.koinViewModel
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun QuestionScreen(
+    navController: NavController,
     themeId: String,
-    onBackClick: () -> Unit,
+    themeName: String,
     viewModel: QuestionViewModel = koinViewModel()
 ) {
 
@@ -54,7 +63,27 @@ fun QuestionScreen(
     }
 
     Scaffold(
-        containerColor = Color.Black
+        containerColor = BackgroundWhite,
+        topBar = {
+            Box(
+                modifier = Modifier.padding(16.dp).fillMaxWidth()
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "arrowBack",
+                    tint = Color.Black,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { navController.popBackStack() }
+                )
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = themeName, color = Color.Black,
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
     ) { padding ->
         Box(
             modifier = Modifier
@@ -86,13 +115,16 @@ fun QuestionScreen(
                     Button(
                         onClick = { viewModel.restart(themeId) },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                            contentColor = Color.Black
+                        )
                     ) {
                         Text("Restart Theme")
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     OutlinedButton(
-                        onClick = onBackClick,
+                        onClick = { navController.popBackStack() },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
                     ) {
@@ -123,16 +155,14 @@ fun QuestionScreen(
                     ) {
                         Text(
                             text = "$currentIndex / $totalQuestions",
-                            color = Color.White,
+                            color = Color.Black,
                             style = MaterialTheme.typography.labelSmall.copy(fontSize = 18.sp),
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 2.sp
                         )
                     }
-
                     Box(
                         modifier = Modifier.weight(1f),
-                        contentAlignment = Alignment.Center
                     ) {
                         HorizontalPager(
                             state = pagerState,
@@ -166,7 +196,8 @@ fun QuestionScreen(
                                         .fillMaxHeight(0.75f),
                                     elevation = CardDefaults.cardElevation(if (page == 0) 12.dp else 4.dp),
                                     colors = CardDefaults.cardColors(
-                                        containerColor = questions.getOrNull(page)?.let { Color(it.color) } ?: Color.Transparent
+                                        containerColor = questions.getOrNull(page)
+                                            ?.let { Color(it.color) } ?: Color.Transparent
                                     )
                                 ) {
                                     Box(
@@ -176,10 +207,13 @@ fun QuestionScreen(
                                         contentAlignment = Alignment.Center
                                     ) {
                                         Text(
-                                            text = questions.getOrNull(page)?.question?.question ?: "Finish",
+                                            text = questions.getOrNull(page)?.question?.question
+                                                ?: "Finish",
                                             style = MaterialTheme.typography.headlineMedium,
                                             textAlign = TextAlign.Center,
-                                            color = if (questions.getOrNull(page) != null) Color.White else Color.White.copy(alpha = 0.3f)
+                                            color = if (questions.getOrNull(page) != null) Color.White else Color.White.copy(
+                                                alpha = 0.3f
+                                            )
                                         )
                                     }
                                 }
@@ -195,9 +229,9 @@ fun QuestionScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Swipe left for next question",
-                            color = Color.White.copy(alpha = 0.3f),
-                            style = MaterialTheme.typography.labelSmall
+                            text = "Geser untuk melihat pertanyaan selanjutnya",
+                            color = Color.Black,
+                            style = MaterialTheme.typography.labelMedium
                         )
                     }
                 }

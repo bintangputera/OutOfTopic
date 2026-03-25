@@ -7,6 +7,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.poetralabs.outoftopic.R
+import org.w3c.dom.Text
 
 val PlayfairDisplay = FontFamily(
     Font(R.font.playfair_display_regular, FontWeight.Normal),
@@ -15,10 +16,21 @@ val PlayfairDisplay = FontFamily(
     Font(R.font.playfair_display_bold, FontWeight.Bold)
 )
 
+val BebasNeue = FontFamily(
+    Font(R.font.bebasneue_regular, weight = FontWeight.Normal)
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography(
+    displayLarge = TextStyle(
+        fontFamily = BebasNeue,
+        fontWeight = FontWeight.Bold,
+        fontSize = 48.sp,
+        lineHeight = 40.sp,
+        letterSpacing = 0.sp
+    ),
     headlineLarge = TextStyle(
-        fontFamily = PlayfairDisplay,
+        fontFamily = BebasNeue,
         fontWeight = FontWeight.Bold,
         fontSize = 32.sp,
         lineHeight = 40.sp,

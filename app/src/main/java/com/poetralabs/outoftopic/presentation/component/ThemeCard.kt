@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.poetralabs.outoftopic.core.data.local.entity.ThemeEntity
+import com.poetralabs.outoftopic.core.theme.Taro
 
 @Composable
 fun ThemeCard(
@@ -32,10 +33,9 @@ fun ThemeCard(
             .height(160.dp)
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
-            containerColor = Color.DarkGray.copy(alpha = 0.3f),
-            contentColor = Color.White
+            containerColor = Taro.copy(alpha = 0.12f),
+            contentColor = Color.Black
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Box(
             modifier = Modifier
@@ -56,7 +56,7 @@ fun ThemeCard(
                     text = theme.description,
                     style = MaterialTheme.typography.labelMedium,
                     textAlign = TextAlign.Center,
-                    color = Color.White
+                    color = Color.Black.copy(alpha = 0.6f)
                 )
             }
         }

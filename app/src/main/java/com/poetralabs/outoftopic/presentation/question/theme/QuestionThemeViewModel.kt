@@ -1,4 +1,4 @@
-package com.poetralabs.outoftopic.presentation.home
+package com.poetralabs.outoftopic.presentation.question.theme
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class HomeViewModel(
+class QuestionThemeViewModel(
     private val questionRepository: QuestionRepository,
     private val analytics: FirebaseAnalytics
 ): ViewModel() {

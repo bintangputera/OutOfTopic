@@ -31,7 +31,7 @@ class QuestionRepositoryImpl(
     override suspend fun fetchQuestionsFromRemote() {
         withContext(Dispatchers.IO) {
             try {
-                val response: QuestionResponse = httpClient.get("https://outoftopic-a7cc3.web.app/question.json").body()
+                val response: QuestionResponse = httpClient.get("https://outoftopic-8df32.web.app/question.json").body()
                 
                 val themes = response.themes.map { 
                     ThemeEntity(id = it.id, displayName = it.displayName, description = it.description)
