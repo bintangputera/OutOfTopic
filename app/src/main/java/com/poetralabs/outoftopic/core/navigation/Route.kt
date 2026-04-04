@@ -13,3 +13,6 @@ object QuestionThemeRoute
 
 @Serializable
 object TruthOrDareRoute
+
+@Serializable
+data class GuideRoute(val startPage: Int = 0)

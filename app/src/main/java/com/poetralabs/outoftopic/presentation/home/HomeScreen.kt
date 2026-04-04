@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -26,9 +27,10 @@ fun HomeScreen(
 ) {
     Scaffold(
         containerColor = BackgroundWhite
-    ) { padding ->
+    ) { _ ->
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(horizontal = 24.dp, vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(24.dp)
@@ -41,8 +43,9 @@ fun HomeScreen(
             Text(
                 text = "Pilih aktivitas yang kamu mau,\n" +
                         "biar tongkrongan makin asik",
-                 color = Color.Black,
-                textAlign = TextAlign.Center
+                color = Color.Black,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Normal)
             )
             HomeMenuCard(
                 menu = HomeMenu.TruthOrDare,

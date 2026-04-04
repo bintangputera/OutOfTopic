@@ -5,17 +5,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,6 +37,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun QuestionThemeScreen(
     onBack: () -> Unit,
+    onGuide: () -> Unit = {},
     onThemeClick: (ThemeEntity) -> Unit,
     viewModel: QuestionThemeViewModel = koinViewModel()
 ) {
@@ -43,15 +46,27 @@ fun QuestionThemeScreen(
     Scaffold(
         containerColor = BackgroundWhite,
         topBar = {
-            Row(modifier = Modifier.padding(16.dp)) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "arrowBack",
-                    tint = Color.Black,
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clickable { onBack() }
-                )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Kembali",
+                        tint = Color.Black
+                    )
+                }
+                IconButton(onClick = onGuide) {
+                    Text(
+                        text = "?",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = Color.Black
+                    )
+                }
             }
         }
     ) { padding ->
@@ -60,15 +75,15 @@ fun QuestionThemeScreen(
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Pertanyaan Random",
-                style = MaterialTheme.typography.headlineLarge,
+                style = MaterialTheme.typography.headlineSmall,
                 color = Color.Black
             )
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Bikin obrolan makin seru dengan pertanyaan random.",
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray,
                 textAlign = TextAlign.Center
             )
@@ -78,9 +93,10 @@ fun QuestionThemeScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(themes) { theme ->
+                itemsIndexed(themes) { index, theme ->
                     ThemeCard(
                         theme = theme,
+                        index = index,
                         onClick = {
                             viewModel.logThemeSelection(theme.id)
                             onThemeClick(theme)
