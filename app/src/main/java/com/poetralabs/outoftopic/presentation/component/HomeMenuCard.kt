@@ -23,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.poetralabs.outoftopic.R
 import com.poetralabs.outoftopic.core.theme.DarkOrange
 import com.poetralabs.outoftopic.core.theme.DarkTaro
@@ -41,7 +42,7 @@ enum class HomeMenu(
         icon = R.drawable.ic_tod,
     ),
     Question(
-        title = "Pertanyaan Random",
+        title = "Random Question",
         desc = "Bikin obrolan makin seru dengan pertanyaan random.",
         bgColor = LightOrange,
         ornamentColor = DarkOrange,
@@ -85,17 +86,18 @@ fun HomeMenuCard(
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
-                    .padding(16.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Text(
                     text = menu.title,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.headlineSmall.copy(fontSize = 20.sp),
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
                 Text(
                     text = menu.desc,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.titleLarge.copy(lineHeight = 18.sp,
+                        fontSize = 24.sp, fontWeight = FontWeight.Normal),
                     color = Color.White
                 )
             }
@@ -104,7 +106,7 @@ fun HomeMenuCard(
 }
 
 @Composable
-@Preview
+@Preview(device = "id:pixel_4_xl", showSystemUi = true)
 fun HomeMenuPreview() {
     Column {
         HomeMenuCard(menu = HomeMenu.Question, onClick = {})
