@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.poetralabs.outoftopic.core.data.local.entity.QuestionEntity
 import com.poetralabs.outoftopic.core.domain.repository.QuestionRepository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -26,6 +27,11 @@ class QuestionViewModel(
     val isFinished = _isFinished.asStateFlow()
 
     private var _allQuestions: List<QuestionEntity> = emptyList()
+    private var _questionJob: Job? = null
+
+    private val _historyStack: MutableList<QuestionWithColor> = mutableListOf()
+    private val _previousQuestion = MutableStateFlow<QuestionWithColor?>(null)
+    val previousQuestion = _previousQuestion.asStateFlow()
 
     private val colors = listOf(
         0xFFE57373, 0xFFF06292, 0xFFBA68C8, 0xFF9575CD,
@@ -35,22 +41,23 @@ class QuestionViewModel(
     )
 
     fun getAllQuestion(themeId: String) {
-        questionRepository.getQuestionByTheme(themeId)
-            .onEach { 
+        _questionJob?.cancel()
+        _questionJob = questionRepository.getQuestionByTheme(themeId)
+            .onEach {
                 if (_question.value.isEmpty() && !_isFinished.value && it.isNotEmpty()) {
                     _allQuestions = it.shuffled()
                     _totalQuestions.value = it.size
                     _currentQuestionIndex.value = 1
-                    
+
                     val initialList = mutableListOf<QuestionWithColor>()
                     initialList.add(QuestionWithColor(_allQuestions.first(), colors.random()))
                     _allQuestions = _allQuestions.drop(1)
-                    
+
                     if (_allQuestions.isNotEmpty()) {
                         initialList.add(QuestionWithColor(_allQuestions.first(), colors.random()))
                         _allQuestions = _allQuestions.drop(1)
                     }
-                    
+
                     _question.value = initialList
                 }
             }
@@ -60,6 +67,8 @@ class QuestionViewModel(
     fun nextQuestion() {
         val currentList = _question.value.toMutableList()
         if (currentList.isNotEmpty()) {
+            _historyStack.add(currentList[0])
+            _previousQuestion.value = currentList[0]
             currentList.removeAt(0)
             if (_allQuestions.isNotEmpty()) {
                 currentList.add(QuestionWithColor(_allQuestions.first(), colors.random()))
@@ -76,10 +85,26 @@ class QuestionViewModel(
         }
     }
 
+    fun goToPreviousQuestion() {
+        if (_historyStack.isEmpty()) return
+        val prev = _historyStack.removeAt(_historyStack.lastIndex)
+        val currentList = _question.value
+        val current = currentList.firstOrNull() ?: return
+        val oldNext = currentList.getOrNull(1)
+        if (oldNext != null) {
+            _allQuestions = listOf(oldNext.question) + _allQuestions
+        }
+        _question.value = listOf(prev, current)
+        _previousQuestion.value = _historyStack.lastOrNull()
+        _currentQuestionIndex.value--
+    }
+
     fun restart(themeId: String) {
         _isFinished.value = false
         _question.value = emptyList()
         _currentQuestionIndex.value = 0
+        _historyStack.clear()
+        _previousQuestion.value = null
         getAllQuestion(themeId)
     }
 }
