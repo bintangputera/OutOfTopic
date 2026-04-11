@@ -16,3 +16,15 @@ object TruthOrDareRoute
 
 @Serializable
 data class GuideRoute(val startPage: Int = 0)
+
+@Serializable
+object SambungKataRoute
+
+@Serializable
+object MiniGamesRoute
+
+@Serializable
+object FeedbackRoute
+
+@Serializable
+object AboutRoute

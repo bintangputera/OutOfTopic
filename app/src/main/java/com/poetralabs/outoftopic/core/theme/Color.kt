@@ -16,3 +16,9 @@ val Taro = Color(0xFF797DFF)
 val DarkTaro = Color(0xFF666BFF)
 val LightOrange = Color(0xFFFFAE43)
 val DarkOrange = Color(0xFFFF9509)
+
+val MintGreen = Color(0xFF40BFA0)
+val DarkMintGreen = Color(0xFF2EA08A)
+
+val SkyBlue = Color(0xFF29B6F6)
+val DarkSkyBlue = Color(0xFF0288D1)

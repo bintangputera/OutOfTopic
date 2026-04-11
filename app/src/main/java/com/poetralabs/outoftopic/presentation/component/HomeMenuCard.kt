@@ -26,8 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.poetralabs.outoftopic.R
 import com.poetralabs.outoftopic.core.theme.DarkOrange
+import com.poetralabs.outoftopic.core.theme.DarkSkyBlue
 import com.poetralabs.outoftopic.core.theme.DarkTaro
 import com.poetralabs.outoftopic.core.theme.LightOrange
+import com.poetralabs.outoftopic.core.theme.SkyBlue
 import com.poetralabs.outoftopic.core.theme.Taro
 
 enum class HomeMenu(
@@ -47,6 +49,13 @@ enum class HomeMenu(
         bgColor = LightOrange,
         ornamentColor = DarkOrange,
         icon = R.drawable.ic_question
+    ),
+    MiniGames(
+        title = "Mini Games",
+        desc = "Koleksi mini game seru buat tongkrongan!",
+        bgColor = SkyBlue,
+        ornamentColor = DarkSkyBlue,
+        icon = R.drawable.ic_light_bulb
     )
 }
 

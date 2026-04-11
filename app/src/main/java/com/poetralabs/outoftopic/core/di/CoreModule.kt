@@ -4,8 +4,10 @@ import androidx.room.Room
 import com.poetralabs.outoftopic.core.data.local.room.AppDatabase
 import com.poetralabs.outoftopic.core.data.repository.QuestionRepositoryImpl
 import com.poetralabs.outoftopic.core.domain.repository.QuestionRepository
+import com.poetralabs.outoftopic.presentation.feedback.FeedbackViewModel
 import com.poetralabs.outoftopic.presentation.question.theme.QuestionThemeViewModel
 import com.poetralabs.outoftopic.presentation.question.QuestionViewModel
+import com.poetralabs.outoftopic.presentation.sambungkata.SambungKataViewModel
 import com.poetralabs.outoftopic.presentation.truthordare.TruthOrDareViewModel
 import com.google.firebase.analytics.FirebaseAnalytics
 import io.ktor.client.HttpClient
@@ -56,6 +58,8 @@ val viewModelModule = module {
     viewModel { QuestionThemeViewModel(get(), get()) }
     viewModel { QuestionViewModel(get()) }
     viewModel { TruthOrDareViewModel() }
+    viewModel { SambungKataViewModel() }
+    viewModel { FeedbackViewModel() }
 }
 
 val appModule = listOf(databaseModule, networkModule, repositoryModule, viewModelModule)

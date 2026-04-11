@@ -1,9 +1,17 @@
 package com.poetralabs.outoftopic.presentation.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.HelpOutline
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -15,6 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.poetralabs.outoftopic.core.navigation.AboutRoute
+import com.poetralabs.outoftopic.core.navigation.MiniGamesRoute
 import com.poetralabs.outoftopic.core.navigation.QuestionThemeRoute
 import com.poetralabs.outoftopic.core.navigation.TruthOrDareRoute
 import com.poetralabs.outoftopic.core.theme.BackgroundWhite
@@ -31,15 +41,29 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp, vertical = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Text(
-                text = "OUT OF\nTOPIC",
-                style = MaterialTheme.typography.displayLarge,
-                color = Color.Black
-            )
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = "OUT OF\nTOPIC",
+                    style = MaterialTheme.typography.displayLarge,
+                    color = Color.Black
+                )
+                IconButton(
+                    modifier = Modifier.align(Alignment.TopEnd),
+                    onClick = { navController.navigate(AboutRoute) }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.HelpOutline,
+                        contentDescription = "Lainnya",
+                        tint = Color.Black
+                    )
+                }
+            }
             Text(
                 text = "Pilih aktivitas yang kamu mau,\n" +
                         "biar tongkrongan makin asik",
@@ -53,9 +77,11 @@ fun HomeScreen(
             )
             HomeMenuCard(
                 menu = HomeMenu.Question,
-                onClick = {
-                    navController.navigate(QuestionThemeRoute)
-                }
+                onClick = { navController.navigate(QuestionThemeRoute) }
+            )
+            HomeMenuCard(
+                menu = HomeMenu.MiniGames,
+                onClick = { navController.navigate(MiniGamesRoute) }
             )
         }
     }
