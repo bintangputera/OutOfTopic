@@ -44,15 +44,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.poetralabs.outoftopic.core.theme.BackgroundWhite
-import com.poetralabs.outoftopic.core.theme.LightOrange
-import com.poetralabs.outoftopic.core.theme.Taro
+import com.poetralabs.outoftopic.core.theme.AnthropicNearBlack
+import com.poetralabs.outoftopic.core.theme.DareColor
+import com.poetralabs.outoftopic.core.theme.ErrorCrimson
+import com.poetralabs.outoftopic.core.theme.Ivory
+import com.poetralabs.outoftopic.core.theme.OliveGray
+import com.poetralabs.outoftopic.core.theme.Parchment
+import com.poetralabs.outoftopic.core.theme.RingWarm
+import com.poetralabs.outoftopic.core.theme.StoneGray
+import com.poetralabs.outoftopic.core.theme.TerracottaBrand
+import com.poetralabs.outoftopic.core.theme.TruthColor
+import com.poetralabs.outoftopic.core.theme.WarmSand
 import org.koin.androidx.compose.koinViewModel
 
 enum class TodMode { TRUTH, DARE }
@@ -86,7 +92,7 @@ fun TruthOrDareScreen(
     }
 
     Scaffold(
-        containerColor = BackgroundWhite,
+        containerColor = Parchment,
         topBar = {
             Row(
                 modifier = Modifier
@@ -99,14 +105,14 @@ fun TruthOrDareScreen(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Kembali",
-                        tint = Color.Black
+                        tint = AnthropicNearBlack
                     )
                 }
                 androidx.compose.material3.IconButton(onClick = onGuide) {
                     Text(
                         text = "?",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = Color.Black
+                        style = MaterialTheme.typography.titleMedium,
+                        color = AnthropicNearBlack
                     )
                 }
             }
@@ -124,34 +130,32 @@ fun TruthOrDareScreen(
                                     onClick = { viewModel.onTurnComplete(scored = true) },
                                     modifier = Modifier
                                         .weight(1f)
-                                        .height(56.dp),
-                                    shape = RoundedCornerShape(16.dp),
+                                        .height(52.dp),
+                                    shape = RoundedCornerShape(12.dp),
                                     colors = ButtonDefaults.buttonColors(
-                                        containerColor = Color(0xFF4CAF50)
+                                        containerColor = TerracottaBrand
                                     )
                                 ) {
                                     Text(
-                                        text = "Selesai! ✓",
+                                        text = "Selesai!",
                                         style = MaterialTheme.typography.titleMedium,
-                                        color = Color.White,
-                                        fontWeight = FontWeight.Bold
+                                        color = Ivory
                                     )
                                 }
                                 OutlinedButton(
                                     onClick = { viewModel.onTurnComplete(scored = false) },
                                     modifier = Modifier
                                         .weight(1f)
-                                        .height(56.dp),
-                                    shape = RoundedCornerShape(16.dp),
-                                    border = BorderStroke(1.dp, Color(0xFFE53935)),
+                                        .height(52.dp),
+                                    shape = RoundedCornerShape(12.dp),
+                                    border = BorderStroke(1.dp, ErrorCrimson),
                                     colors = ButtonDefaults.outlinedButtonColors(
-                                        contentColor = Color(0xFFE53935)
+                                        contentColor = ErrorCrimson
                                     )
                                 ) {
                                     Text(
-                                        text = "Lewati ✗",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.Bold
+                                        text = "Lewati",
+                                        style = MaterialTheme.typography.titleMedium
                                     )
                                 }
                             }
@@ -162,14 +166,14 @@ fun TruthOrDareScreen(
                                 onClick = { viewModel.onTurnComplete(scored = false) },
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(56.dp),
-                                shape = RoundedCornerShape(16.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = Taro)
+                                    .height(52.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = TruthColor)
                             ) {
                                 Text(
-                                    text = "Lanjut →",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    color = Color.White
+                                    text = "Lanjut",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = Ivory
                                 )
                             }
                         }
@@ -186,23 +190,20 @@ fun TruthOrDareScreen(
                             onClick = { selectedMode = TodMode.TRUTH },
                             modifier = Modifier
                                 .weight(1f)
-                                .height(90.dp),
-                            shape = RoundedCornerShape(20.dp),
+                                .height(80.dp),
+                            shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (truthSelected) Taro else Color.White,
-                                contentColor = if (truthSelected) Color.White else Taro
+                                containerColor = if (truthSelected) TruthColor else Ivory,
+                                contentColor = if (truthSelected) Ivory else TruthColor
                             ),
-                            elevation = ButtonDefaults.buttonElevation(
-                                defaultElevation = if (truthSelected) 0.dp else 2.dp
-                            )
+                            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp),
+                            border = if (!truthSelected) BorderStroke(1.dp, RingWarm) else null
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(text = "🤔", style = MaterialTheme.typography.titleLarge)
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = "TRUTH",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold
+                                    style = MaterialTheme.typography.headlineSmall
                                 )
                             }
                         }
@@ -212,23 +213,20 @@ fun TruthOrDareScreen(
                             onClick = { selectedMode = TodMode.DARE },
                             modifier = Modifier
                                 .weight(1f)
-                                .height(90.dp),
-                            shape = RoundedCornerShape(20.dp),
+                                .height(80.dp),
+                            shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (dareSelected) LightOrange else Color.White,
-                                contentColor = if (dareSelected) Color.White else LightOrange
+                                containerColor = if (dareSelected) DareColor else Ivory,
+                                contentColor = if (dareSelected) Ivory else DareColor
                             ),
-                            elevation = ButtonDefaults.buttonElevation(
-                                defaultElevation = if (dareSelected) 0.dp else 2.dp
-                            )
+                            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp),
+                            border = if (!dareSelected) BorderStroke(1.dp, RingWarm) else null
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(text = "🔥", style = MaterialTheme.typography.titleLarge)
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = "DARE",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold
+                                    style = MaterialTheme.typography.headlineSmall
                                 )
                             }
                         }
@@ -240,16 +238,16 @@ fun TruthOrDareScreen(
                         onClick = { selectedMode?.let { viewModel.rollQuestion(it) } },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(56.dp),
-                        shape = RoundedCornerShape(16.dp),
+                            .height(52.dp),
+                        shape = RoundedCornerShape(12.dp),
                         enabled = selectedMode != null && !isRolling,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = when (selectedMode) {
-                                TodMode.TRUTH -> Taro
-                                TodMode.DARE -> LightOrange
-                                null -> Color.LightGray
+                                TodMode.TRUTH -> TruthColor
+                                TodMode.DARE -> DareColor
+                                null -> WarmSand
                             },
-                            disabledContainerColor = Color.LightGray
+                            disabledContainerColor = WarmSand
                         )
                     ) {
                         Text(
@@ -258,8 +256,11 @@ fun TruthOrDareScreen(
                                 TodMode.DARE -> "Mulai Dare!"
                                 null -> "Pilih dulu"
                             },
-                            style = MaterialTheme.typography.titleLarge,
-                            color = Color.White
+                            style = MaterialTheme.typography.titleMedium,
+                            color = when {
+                                selectedMode == null || !(!isRolling) -> StoneGray
+                                else -> Ivory
+                            }
                         )
                     }
                 }
@@ -277,14 +278,14 @@ fun TruthOrDareScreen(
 
             Text(
                 text = "Truth or Dare",
-                style = MaterialTheme.typography.headlineSmall,
-                color = Color.Black
+                style = MaterialTheme.typography.headlineMedium,
+                color = AnthropicNearBlack
             )
 
             Text(
                 text = "Pilih tantangan atau jujur-jujuran",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
+                color = OliveGray,
                 textAlign = TextAlign.Center
             )
 
@@ -302,9 +303,9 @@ fun TruthOrDareScreen(
                 Spacer(modifier = Modifier.height(10.dp))
                 val currentPlayer = players[currentPlayerIndex]
                 val activeColor = when (currentMode ?: selectedMode) {
-                    TodMode.TRUTH -> Taro
-                    TodMode.DARE -> LightOrange
-                    null -> Color.Gray
+                    TodMode.TRUTH -> TruthColor
+                    TodMode.DARE -> DareColor
+                    null -> StoneGray
                 }
                 Text(
                     text = when {
@@ -330,15 +331,11 @@ fun TruthOrDareScreen(
             ) {
                 if (currentQuestion == null) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = "🎲",
-                            style = MaterialTheme.typography.displayLarge
-                        )
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
                             text = "Pilih Truth atau Dare\nlalu tekan mulai!",
                             style = MaterialTheme.typography.bodyLarge,
-                            color = Color.Black,
+                            color = OliveGray,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -353,10 +350,9 @@ fun TruthOrDareScreen(
                     ) { question ->
                         Text(
                             text = question ?: "",
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = Color.Black,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.SemiBold
+                            style = MaterialTheme.typography.headlineLarge,
+                            color = AnthropicNearBlack,
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
@@ -388,22 +384,22 @@ private fun PlayerSection(
                 onClick = {},
                 label = {
                     Text(
-                        text = if (score > 0) "$name • $score" else name,
-                        style = MaterialTheme.typography.titleMedium,
+                        text = if (score > 0) "$name $score" else name,
+                        style = MaterialTheme.typography.labelLarge,
                     )
                 },
                 trailingIcon = {
                     Text(
-                        text = "×",
+                        text = "x",
                         modifier = Modifier.clickable { onRemovePlayer(index) },
-                        style = MaterialTheme.typography.titleMedium,
-                        color = if (isCurrentPlayer) Color.White else Color.Black
+                        style = MaterialTheme.typography.labelLarge,
+                        color = if (isCurrentPlayer) Ivory else AnthropicNearBlack
                     )
                 },
                 colors = InputChipDefaults.inputChipColors(
-                    selectedContainerColor = Taro,
-                    selectedLabelColor = Color.White,
-                    labelColor = Color.Black
+                    selectedContainerColor = TruthColor,
+                    selectedLabelColor = Ivory,
+                    labelColor = AnthropicNearBlack
                 )
             )
         }
@@ -412,8 +408,8 @@ private fun PlayerSection(
             label = {
                 Text(
                     "+ Pemain",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black
+                    style = MaterialTheme.typography.labelLarge,
+                    color = AnthropicNearBlack
                 )
             }
         )
@@ -429,12 +425,12 @@ private fun AddPlayerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = Color.White,
+        containerColor = Ivory,
         title = {
             Text(
                 "Tambah Pemain",
                 style = MaterialTheme.typography.headlineSmall,
-                color = Color.Black
+                color = AnthropicNearBlack
             )
         },
         text = {
@@ -445,15 +441,15 @@ private fun AddPlayerDialog(
                     Text(
                         "Nama pemain",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Black
+                        color = OliveGray
                     )
                 },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.Black,
-                    focusedTextColor = Color.Black,
-                    cursorColor = Color.Black
+                    focusedBorderColor = TerracottaBrand,
+                    focusedTextColor = AnthropicNearBlack,
+                    cursorColor = TerracottaBrand
                 ),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = {
@@ -463,12 +459,12 @@ private fun AddPlayerDialog(
         },
         confirmButton = {
             TextButton(onClick = { if (name.isNotBlank()) onAdd(name) }) {
-                Text("Tambah", style = MaterialTheme.typography.titleMedium, color = Color.Black)
+                Text("Tambah", style = MaterialTheme.typography.titleMedium, color = TerracottaBrand)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Batal", style = MaterialTheme.typography.titleMedium, color = Color.Black)
+                Text("Batal", style = MaterialTheme.typography.titleMedium, color = StoneGray)
             }
         }
     )

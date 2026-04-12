@@ -31,12 +31,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.poetralabs.outoftopic.core.theme.BackgroundWhite
-import com.poetralabs.outoftopic.core.theme.MintGreen
+import com.poetralabs.outoftopic.core.theme.AnthropicNearBlack
+import com.poetralabs.outoftopic.core.theme.BorderCream
+import com.poetralabs.outoftopic.core.theme.Ivory
+import com.poetralabs.outoftopic.core.theme.OliveGray
+import com.poetralabs.outoftopic.core.theme.Parchment
+import com.poetralabs.outoftopic.core.theme.StoneGray
+import com.poetralabs.outoftopic.core.theme.TerracottaBrand
 
 @Composable
 fun AboutScreen(
@@ -47,28 +50,33 @@ fun AboutScreen(
 
     if (showAboutDialog) {
         AlertDialog(
-            containerColor = Color.White,
+            containerColor = Ivory,
             onDismissRequest = { showAboutDialog = false },
             title = {
-                Text("Out of Topic", fontWeight = FontWeight.Bold, color = Color.Black)
+                Text(
+                    "Out of Topic",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = AnthropicNearBlack
+                )
             },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
                         "Versi 1.0.0",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Black
+                        color = OliveGray
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         "Aplikasi seru untuk meramaikan tongkrongan kamu — Truth or Dare, Random Question, dan Mini Games.",
-                        style = MaterialTheme.typography.bodyMedium, color = Color.Black
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = AnthropicNearBlack
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        "© 2024 Poetra Labs",
+                        "\u00A9 2024 Poetra Labs",
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.Black
+                        color = StoneGray
                     )
                 }
             },
@@ -76,8 +84,7 @@ fun AboutScreen(
                 TextButton(onClick = { showAboutDialog = false }) {
                     Text(
                         "Tutup",
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold,
+                        color = TerracottaBrand,
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -86,7 +93,7 @@ fun AboutScreen(
     }
 
     Scaffold(
-        containerColor = BackgroundWhite,
+        containerColor = Parchment,
         topBar = {
             Row(
                 modifier = Modifier
@@ -98,7 +105,7 @@ fun AboutScreen(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Kembali",
-                        tint = Color.Black
+                        tint = AnthropicNearBlack
                     )
                 }
             }
@@ -113,10 +120,14 @@ fun AboutScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Card(
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(containerColor = Ivory),
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                border = CardDefaults.outlinedCardBorder().copy(
+                    width = 1.dp,
+                    brush = androidx.compose.ui.graphics.SolidColor(BorderCream)
+                )
             ) {
                 AboutMenuItem(
                     title = "Beri Feedback",
@@ -125,7 +136,7 @@ fun AboutScreen(
                 )
                 HorizontalDivider(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    color = Color(0xFFF0F0F0)
+                    color = BorderCream
                 )
                 AboutMenuItem(
                     title = "Tentang Aplikasi",
@@ -138,16 +149,15 @@ fun AboutScreen(
 
             Text(
                 text = "Out of Topic",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                style = MaterialTheme.typography.headlineSmall,
+                color = AnthropicNearBlack,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
             Text(
-                text = "Versi 1.0.0 · © 2026 Poetra Labs",
+                text = "Versi 1.0.0 \u00B7 \u00A9 2026 Poetra Labs",
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray,
+                color = StoneGray,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -175,20 +185,19 @@ private fun AboutMenuItem(
             Text(
                 text = title,
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.Black
+                color = AnthropicNearBlack
             )
             Text(
                 text = subtitle,
-                style = MaterialTheme.typography.titleSmall,
-                color = Color.Gray
+                style = MaterialTheme.typography.bodySmall,
+                color = OliveGray
             )
         }
         Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowForward,
             contentDescription = null,
-            tint = Color.Black,
-            modifier = Modifier.size(24.dp)
+            tint = StoneGray,
+            modifier = Modifier.size(20.dp)
         )
     }
 }

@@ -49,16 +49,18 @@ import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import com.poetralabs.outoftopic.R
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.poetralabs.outoftopic.core.theme.BackgroundWhite
+import com.poetralabs.outoftopic.core.theme.AnthropicNearBlack
+import com.poetralabs.outoftopic.core.theme.Ivory
+import com.poetralabs.outoftopic.core.theme.OliveGray
+import com.poetralabs.outoftopic.core.theme.Parchment
+import com.poetralabs.outoftopic.core.theme.TerracottaBrand
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -89,7 +91,7 @@ fun QuestionScreen(
     }
 
     Scaffold(
-        containerColor = BackgroundWhite,
+        containerColor = Parchment,
         topBar = {
             Box(
                 modifier = Modifier
@@ -99,7 +101,7 @@ fun QuestionScreen(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "arrowBack",
-                    tint = Color.Black,
+                    tint = AnthropicNearBlack,
                     modifier = Modifier
                         .size(24.dp)
                         .clickable { navController.popBackStack() }
@@ -107,8 +109,8 @@ fun QuestionScreen(
                 if (!isFinished) {
                     Text(
                         modifier = Modifier.align(Alignment.Center),
-                        text = themeName, color = Color.Black,
-                        style = MaterialTheme.typography.titleLarge,
+                        text = themeName, color = AnthropicNearBlack,
+                        style = MaterialTheme.typography.headlineSmall,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -130,26 +132,27 @@ fun QuestionScreen(
                 ) {
                     Text(
                         text = "Beres!",
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = Color.Black,
+                        style = MaterialTheme.typography.displaySmall,
+                        color = AnthropicNearBlack,
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "Mau lanjut ke tema lain?",
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Normal),
-                        color = Color.Black,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = OliveGray,
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(32.dp))
                     OutlinedButton(
                         onClick = { navController.popBackStack() },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Black)
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = AnthropicNearBlack)
                     ) {
                         Text(
                             "Kembali ke pilihan tema",
-                            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 12.sp),
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
                 }
@@ -161,7 +164,6 @@ fun QuestionScreen(
                 val velocityThreshold = 1200f
                 val minFlingDisplacement = screenWidthPx * 0.12f
 
-                // Resets to 0 automatically whenever the front question changes
                 val dragOffset = remember(questions[0]) { Animatable(0f) }
                 val velocityTracker = remember { VelocityTracker() }
 
@@ -173,10 +175,8 @@ fun QuestionScreen(
                     ) {
                         Text(
                             text = "$currentIndex / $totalQuestions",
-                            color = Color.Black,
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 2.sp
+                            color = OliveGray,
+                            style = MaterialTheme.typography.labelLarge
                         )
                     }
 
@@ -186,7 +186,7 @@ fun QuestionScreen(
                             .fillMaxWidth(),
                         contentAlignment = Alignment.Center
                     ) {
-                        // Behind card — scales up as the drag progresses
+                        // Behind card
                         val swipingToPrev = dragOffset.value > 0f
                         val behindData =
                             if (swipingToPrev) previousQuestion else questions.getOrNull(1)
@@ -194,7 +194,6 @@ fun QuestionScreen(
                             (dragOffset.value.absoluteValue / screenWidthPx).coerceIn(0f, 1f)
                         val behindScale = 0.92f + progress * 0.08f
 
-                        // Only show the behind card when there is actually something behind
                         if (behindData != null) Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -208,6 +207,7 @@ fun QuestionScreen(
                                 modifier = Modifier
                                     .padding(horizontal = 32.dp)
                                     .fillMaxHeight(0.75f),
+                                shape = RoundedCornerShape(16.dp),
                                 elevation = CardDefaults.cardElevation(4.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = Color(behindData.color)
@@ -229,7 +229,7 @@ fun QuestionScreen(
                             }
                         }
 
-                        // Front card — draggable, translates and rotates with the drag
+                        // Front card
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -258,7 +258,6 @@ fun QuestionScreen(
                                                 when {
                                                     dragOffset.value < -swipeThreshold ||
                                                             (velocity < -velocityThreshold && dragOffset.value < -minFlingDisplacement) -> {
-                                                        // Fly off left → next question
                                                         dragOffset.animateTo(
                                                             -screenWidthPx * 1.4f,
                                                             tween(durationMillis = 280)
@@ -268,7 +267,6 @@ fun QuestionScreen(
 
                                                     ((dragOffset.value > swipeThreshold) ||
                                                             (velocity > velocityThreshold && dragOffset.value > minFlingDisplacement)) && previousQuestion != null -> {
-                                                        // Fly off right → previous question
                                                         dragOffset.animateTo(
                                                             screenWidthPx * 1.4f,
                                                             tween(durationMillis = 280)
@@ -277,7 +275,6 @@ fun QuestionScreen(
                                                     }
 
                                                     else -> {
-                                                        // Not far enough — spring back
                                                         dragOffset.animateTo(
                                                             0f,
                                                             spring(
@@ -305,6 +302,7 @@ fun QuestionScreen(
                                 modifier = Modifier
                                     .padding(horizontal = 32.dp)
                                     .fillMaxHeight(0.75f),
+                                shape = RoundedCornerShape(16.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = questions.getOrNull(0)?.let { Color(it.color) }
                                         ?: Color.Transparent
@@ -335,7 +333,7 @@ fun QuestionScreen(
                                             .fillMaxWidth()
                                             .height(48.dp)
                                             .align(Alignment.BottomCenter),
-                                        shape = RoundedCornerShape(14.dp),
+                                        shape = RoundedCornerShape(12.dp),
                                         colors = ButtonDefaults.buttonColors(
                                             containerColor = Color.White.copy(alpha = 0.25f),
                                             contentColor = Color.White
@@ -343,8 +341,7 @@ fun QuestionScreen(
                                     ) {
                                         Text(
                                             text = "Share ke Instagram",
-                                            style = MaterialTheme.typography.titleMedium,
-                                            fontWeight = FontWeight.Bold
+                                            style = MaterialTheme.typography.titleMedium
                                         )
                                     }
                                 }
@@ -362,8 +359,8 @@ fun QuestionScreen(
                     ) {
                         Text(
                             text = "Geser untuk melihat pertanyaan selanjutnya",
-                            color = Color.Black,
-                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+                            color = OliveGray,
+                            style = MaterialTheme.typography.bodySmall,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -403,7 +400,6 @@ private suspend fun shareQuestionToInstagram(context: Context, questionText: Str
         )
         context.startActivity(storyIntent)
     } else {
-        // Instagram not installed — fall back to the system share sheet
         val fallback = Intent(Intent.ACTION_SEND).apply {
             type = "image/png"
             putExtra(Intent.EXTRA_STREAM, uri)
@@ -414,64 +410,62 @@ private suspend fun shareQuestionToInstagram(context: Context, questionText: Str
 }
 
 /**
- * Generates a 1080×1920 Instagram Story image from scratch matching the branded template:
- *  - App logo + tagline at top
- *  - Question card (bordered rounded rect) in the middle with an empty "Jawaban Kamu:" answer box
- *  - "OutOfTopic" label + Google Play badge at the bottom
+ * Generates a 1080x1920 Instagram Story image with warm Anthropic-inspired styling.
  */
 private fun createStoryTemplate(context: Context, questionText: String): Bitmap {
     val W = 1080
     val H = 1920
     val bmp = Bitmap.createBitmap(W, H, Bitmap.Config.ARGB_8888)
     val canvas = android.graphics.Canvas(bmp)
-    canvas.drawColor(android.graphics.Color.WHITE)
+    // Parchment background
+    canvas.drawColor(0xFFF5F4ED.toInt())
 
-    val bebasNeue = ResourcesCompat.getFont(context, R.font.bebasneue_regular)
     val playfairBold = ResourcesCompat.getFont(context, R.font.playfair_display_bold)
+    val playfairMedium = ResourcesCompat.getFont(context, R.font.playfair_display_medium)
     val playfairReg = ResourcesCompat.getFont(context, R.font.playfair_display_regular)
 
-    // ── App logo ─────────────────────────────────────────────────────────────
+    // App logo — serif style
     val titlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = android.graphics.Color.BLACK
-        textSize = W * 0.185f
-        typeface = bebasNeue ?: Typeface.DEFAULT_BOLD
+        color = 0xFF141413.toInt()
+        textSize = W * 0.12f
+        typeface = playfairMedium ?: Typeface.create("serif", Typeface.NORMAL)
         textAlign = Paint.Align.CENTER
     }
-    canvas.drawText("OUT OF", W / 2f, H * 0.135f, titlePaint)
-    canvas.drawText("TOPIC", W / 2f, H * 0.215f, titlePaint)
+    canvas.drawText("Out of", W / 2f, H * 0.135f, titlePaint)
+    canvas.drawText("Topic", W / 2f, H * 0.200f, titlePaint)
 
     val taglinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = android.graphics.Color.BLACK
+        color = 0xFF5E5D59.toInt()
         textSize = W * 0.034f
-        typeface = Typeface.create(playfairReg ?: Typeface.DEFAULT, Typeface.ITALIC)
+        typeface = Typeface.create(playfairReg ?: Typeface.create("serif", Typeface.NORMAL), Typeface.ITALIC)
         textAlign = Paint.Align.CENTER
     }
     canvas.drawText(
         "\u201CBukan gak nyambung, cuma Out Of Topic.\u201D",
         W / 2f,
-        H * 0.253f,
+        H * 0.240f,
         taglinePaint
     )
 
-    // ── Question card ─────────────────────────────────────────────────────────
+    // Question card with terracotta border
     val cardL = W * 0.074f
     val cardR = W * 0.926f
     val cardT = H * 0.285f
     val cardB = H * 0.620f
-    val cardRadius = 50f
+    val cardRadius = 40f
 
     val cardBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = android.graphics.Color.BLACK
+        color = 0xFFC96442.toInt() // Terracotta
         style = Paint.Style.STROKE
         strokeWidth = 7f
     }
     canvas.drawRoundRect(RectF(cardL, cardT, cardR, cardB), cardRadius, cardRadius, cardBorderPaint)
 
-    // Question text — bold, centered, word-wrapped in upper portion of card
+    // Question text
     val qPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = android.graphics.Color.BLACK
+        color = 0xFF141413.toInt()
         textSize = W * 0.053f
-        typeface = Typeface.create(playfairBold ?: Typeface.DEFAULT_BOLD, Typeface.BOLD)
+        typeface = Typeface.create(playfairMedium ?: Typeface.create("serif", Typeface.NORMAL), Typeface.NORMAL)
         textAlign = Paint.Align.CENTER
     }
     drawCenteredMultilineText(
@@ -486,9 +480,9 @@ private fun createStoryTemplate(context: Context, questionText: String): Bitmap 
 
     // "Jawaban Kamu:" label
     val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = android.graphics.Color.BLACK
+        color = 0xFF5E5D59.toInt()
         textSize = W * 0.036f
-        typeface = playfairReg ?: Typeface.DEFAULT
+        typeface = playfairReg ?: Typeface.create("serif", Typeface.NORMAL)
         textAlign = Paint.Align.LEFT
     }
     val innerPad = W * 0.065f
@@ -497,7 +491,7 @@ private fun createStoryTemplate(context: Context, questionText: String): Bitmap 
 
     // Empty answer box
     val answerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = android.graphics.Color.BLACK
+        color = 0xFFE8E6DC.toInt() // BorderWarm
         style = Paint.Style.STROKE
         strokeWidth = 5f
     }
@@ -506,11 +500,11 @@ private fun createStoryTemplate(context: Context, questionText: String): Bitmap 
         22f, 22f, answerPaint
     )
 
-    // ── Bottom branding ───────────────────────────────────────────────────────
+    // Bottom branding
     val brandPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = android.graphics.Color.BLACK
+        color = 0xFF141413.toInt()
         textSize = W * 0.058f
-        typeface = Typeface.create(playfairBold ?: Typeface.DEFAULT_BOLD, Typeface.BOLD)
+        typeface = Typeface.create(playfairMedium ?: Typeface.create("serif", Typeface.NORMAL), Typeface.NORMAL)
         textAlign = Paint.Align.CENTER
     }
     canvas.drawText("OutOfTopic", W / 2f, H * 0.856f, brandPaint)
@@ -545,7 +539,6 @@ private fun drawCenteredMultilineText(
     areaBottom: Float,
     maxWidth: Float
 ) {
-    // Word-wrap
     val lines = mutableListOf<String>()
     var current = ""
     for (word in text.split(" ")) {
@@ -559,7 +552,6 @@ private fun drawCenteredMultilineText(
     }
     if (current.isNotEmpty()) lines.add(current)
 
-    // Vertically center the text block inside the area
     val fm = paint.fontMetrics
     val lineH = paint.fontSpacing
     val blockH = lines.size * lineH

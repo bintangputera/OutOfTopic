@@ -28,19 +28,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.poetralabs.outoftopic.core.theme.BackgroundWhite
-import com.poetralabs.outoftopic.core.theme.MintGreen
+import com.poetralabs.outoftopic.core.theme.AnthropicNearBlack
+import com.poetralabs.outoftopic.core.theme.GameColor
+import com.poetralabs.outoftopic.core.theme.Ivory
+import com.poetralabs.outoftopic.core.theme.OliveGray
+import com.poetralabs.outoftopic.core.theme.Parchment
+import com.poetralabs.outoftopic.core.theme.WarmSilver
 
 data class MiniGameItem(
-    val emoji: String,
     val title: String,
     val description: String,
     val bgColor: Color,
-    val textColor: Color = Color.White,
+    val textColor: Color = Ivory,
     val onClick: () -> Unit
 )
 
@@ -51,16 +52,15 @@ fun MiniGamesScreen(
 ) {
     val games = listOf(
         MiniGameItem(
-            emoji = "🔗",
             title = "Sambung Kata",
             description = "Sambung kata dari huruf terakhir. Kehabisan waktu atau salah huruf? Out!",
-            bgColor = MintGreen,
+            bgColor = GameColor,
             onClick = onSambungKata
         )
     )
 
     Scaffold(
-        containerColor = BackgroundWhite,
+        containerColor = Parchment,
         topBar = {
             Row(
                 modifier = Modifier
@@ -72,7 +72,7 @@ fun MiniGamesScreen(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Kembali",
-                        tint = Color.Black
+                        tint = AnthropicNearBlack
                     )
                 }
             }
@@ -90,14 +90,14 @@ fun MiniGamesScreen(
 
             Text(
                 text = "Mini Games",
-                style = MaterialTheme.typography.headlineSmall,
-                color = Color.Black,
+                style = MaterialTheme.typography.headlineMedium,
+                color = AnthropicNearBlack,
                 textAlign = TextAlign.Center
             )
             Text(
                 text = "Pilih game buat ramaikan tongkrongan!",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
+                color = OliveGray,
                 textAlign = TextAlign.Center
             )
 
@@ -117,7 +117,7 @@ private fun MiniGameCard(game: MiniGameItem) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable { game.onClick() },
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = game.bgColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
@@ -128,24 +128,20 @@ private fun MiniGameCard(game: MiniGameItem) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Column {
-                    Text(
-                        text = game.title,
-                        style = MaterialTheme.typography.headlineSmall.copy(fontSize = 20.sp),
-                        color = game.textColor,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = game.description,
-                        style = MaterialTheme.typography.titleLarge.copy(lineHeight = 18.sp,
-                            fontSize = 24.sp, fontWeight = FontWeight.Normal),
-                        color = game.textColor.copy(alpha = 0.85f),
-                        modifier = Modifier.width(220.dp)
-                    )
-                }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = game.title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = game.textColor
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = game.description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = game.textColor.copy(alpha = 0.8f)
+                )
             }
+            Spacer(modifier = Modifier.width(12.dp))
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = null,

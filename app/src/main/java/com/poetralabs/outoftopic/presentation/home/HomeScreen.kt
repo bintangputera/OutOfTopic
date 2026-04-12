@@ -18,8 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -27,7 +25,9 @@ import com.poetralabs.outoftopic.core.navigation.AboutRoute
 import com.poetralabs.outoftopic.core.navigation.MiniGamesRoute
 import com.poetralabs.outoftopic.core.navigation.QuestionThemeRoute
 import com.poetralabs.outoftopic.core.navigation.TruthOrDareRoute
-import com.poetralabs.outoftopic.core.theme.BackgroundWhite
+import com.poetralabs.outoftopic.core.theme.AnthropicNearBlack
+import com.poetralabs.outoftopic.core.theme.OliveGray
+import com.poetralabs.outoftopic.core.theme.Parchment
 import com.poetralabs.outoftopic.presentation.component.HomeMenu
 import com.poetralabs.outoftopic.presentation.component.HomeMenuCard
 
@@ -36,7 +36,7 @@ fun HomeScreen(
     navController: NavController
 ) {
     Scaffold(
-        containerColor = BackgroundWhite
+        containerColor = Parchment
     ) { _ ->
         Column(
             modifier = Modifier
@@ -51,7 +51,8 @@ fun HomeScreen(
                     modifier = Modifier.align(Alignment.Center),
                     text = "OUT OF\nTOPIC",
                     style = MaterialTheme.typography.displayLarge,
-                    color = Color.Black
+                    color = AnthropicNearBlack,
+                    textAlign = TextAlign.Center
                 )
                 IconButton(
                     modifier = Modifier.align(Alignment.TopEnd),
@@ -60,16 +61,15 @@ fun HomeScreen(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.HelpOutline,
                         contentDescription = "Lainnya",
-                        tint = Color.Black
+                        tint = OliveGray
                     )
                 }
             }
             Text(
-                text = "Pilih aktivitas yang kamu mau,\n" +
-                        "biar tongkrongan makin asik",
-                color = Color.Black,
+                text = "Pilih aktivitas yang kamu mau,\nbiar tongkrongan makin asik",
+                color = OliveGray,
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Normal)
+                style = MaterialTheme.typography.bodyMedium
             )
             HomeMenuCard(
                 menu = HomeMenu.TruthOrDare,

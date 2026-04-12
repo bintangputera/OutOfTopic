@@ -20,21 +20,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.poetralabs.outoftopic.R
-import com.poetralabs.outoftopic.core.theme.DarkOrange
-import com.poetralabs.outoftopic.core.theme.DarkSkyBlue
+import com.poetralabs.outoftopic.core.theme.CoralAccent
+import com.poetralabs.outoftopic.core.theme.DarkGameColor
+import com.poetralabs.outoftopic.core.theme.DareColor
 import com.poetralabs.outoftopic.core.theme.DarkTaro
-import com.poetralabs.outoftopic.core.theme.LightOrange
-import com.poetralabs.outoftopic.core.theme.SkyBlue
+import com.poetralabs.outoftopic.core.theme.GameColor
 import com.poetralabs.outoftopic.core.theme.Taro
+import com.poetralabs.outoftopic.core.theme.TerracottaBrand
 
 enum class HomeMenu(
     val title: String, val desc: String,
-    val bgColor: Color, val ornamentColor: Color, val icon: Int
+    val bgColor: Color, val ornamentColor: Color,
+    val icon: Int
 ) {
     TruthOrDare(
         title = "Truth or Dare",
@@ -46,15 +46,15 @@ enum class HomeMenu(
     Question(
         title = "Random Question",
         desc = "Bikin obrolan makin seru dengan pertanyaan random.",
-        bgColor = LightOrange,
-        ornamentColor = DarkOrange,
+        bgColor = CoralAccent,
+        ornamentColor = TerracottaBrand,
         icon = R.drawable.ic_question
     ),
     MiniGames(
         title = "Mini Games",
         desc = "Koleksi mini game seru buat tongkrongan!",
-        bgColor = SkyBlue,
-        ornamentColor = DarkSkyBlue,
+        bgColor = GameColor,
+        ornamentColor = DarkGameColor,
         icon = R.drawable.ic_light_bulb
     )
 }
@@ -70,7 +70,7 @@ fun HomeMenuCard(
             .fillMaxWidth()
             .height(180.dp)
             .clickable { onClick() },
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = menu.bgColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
@@ -95,18 +95,16 @@ fun HomeMenuCard(
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 20.dp, vertical = 16.dp)
             ) {
                 Text(
                     text = menu.title,
-                    style = MaterialTheme.typography.headlineSmall.copy(fontSize = 20.sp),
-                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.headlineSmall,
                     color = Color.White
                 )
                 Text(
                     text = menu.desc,
-                    style = MaterialTheme.typography.titleLarge.copy(lineHeight = 18.sp,
-                        fontSize = 24.sp, fontWeight = FontWeight.Normal),
+                    style = MaterialTheme.typography.bodySmall,
                     color = Color.White
                 )
             }

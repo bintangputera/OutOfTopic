@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -24,11 +23,9 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -36,19 +33,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.poetralabs.outoftopic.R
-import com.poetralabs.outoftopic.core.theme.BackgroundWhite
-import com.poetralabs.outoftopic.core.theme.DarkOrange
-import com.poetralabs.outoftopic.core.theme.DarkTaro
-import com.poetralabs.outoftopic.core.theme.LightOrange
-import com.poetralabs.outoftopic.core.theme.Taro
+import com.poetralabs.outoftopic.core.theme.AnthropicNearBlack
+import com.poetralabs.outoftopic.core.theme.DareColor
+import com.poetralabs.outoftopic.core.theme.DarkDareColor
+import com.poetralabs.outoftopic.core.theme.DarkTruthColor
+import com.poetralabs.outoftopic.core.theme.Ivory
+import com.poetralabs.outoftopic.core.theme.OliveGray
+import com.poetralabs.outoftopic.core.theme.Parchment
+import com.poetralabs.outoftopic.core.theme.RingWarm
+import com.poetralabs.outoftopic.core.theme.TruthColor
 import kotlinx.coroutines.launch
 
 private data class GuideStep(val number: Int, val text: String)
@@ -76,8 +74,8 @@ private val guidePages = listOf(
             GuideStep(5, "Putar lagi untuk giliran berikutnya!"),
         ),
         icon = R.drawable.ic_tod,
-        bgColor = Taro,
-        accentColor = DarkTaro,
+        bgColor = TruthColor,
+        accentColor = DarkTruthColor,
     ),
     GuidePage(
         title = "Random Question",
@@ -94,8 +92,8 @@ private val guidePages = listOf(
             GuideStep(5, "Geser terus untuk pertanyaan berikutnya yang makin seru!"),
         ),
         icon = R.drawable.ic_question,
-        bgColor = LightOrange,
-        accentColor = DarkOrange,
+        bgColor = DareColor,
+        accentColor = DarkDareColor,
     ),
 )
 
@@ -116,7 +114,7 @@ fun GuideScreen(
     )
 
     Scaffold(
-        containerColor = BackgroundWhite,
+        containerColor = Parchment,
         topBar = {
             Box(
                 modifier = Modifier
@@ -126,15 +124,15 @@ fun GuideScreen(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "arrowBack",
-                    tint = Color.Black,
+                    tint = AnthropicNearBlack,
                     modifier = Modifier
                         .size(24.dp)
                         .clickable { navController.popBackStack() }
                 )
                 Text(
                     modifier = Modifier.align(Alignment.Center),
-                    text = "Panduan", color = Color.Black,
-                    style = MaterialTheme.typography.titleLarge,
+                    text = "Panduan", color = AnthropicNearBlack,
+                    style = MaterialTheme.typography.headlineSmall,
                     textAlign = TextAlign.Center
                 )
             }
@@ -145,7 +143,6 @@ fun GuideScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            // Pager
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.weight(1f)
@@ -153,7 +150,6 @@ fun GuideScreen(
                 GuidePage(page = guidePages[page], bgColor = bgColor)
             }
 
-            // Bottom controls
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -169,7 +165,7 @@ fun GuideScreen(
                     repeat(guidePages.size) { index ->
                         val isSelected = index == pagerState.currentPage
                         val dotColor by animateColorAsState(
-                            targetValue = if (isSelected) currentPage.bgColor else Color.LightGray,
+                            targetValue = if (isSelected) currentPage.bgColor else RingWarm,
                             animationSpec = tween(300),
                             label = "dot"
                         )
@@ -182,7 +178,6 @@ fun GuideScreen(
                     }
                 }
 
-                // Action button
                 Button(
                     onClick = {
                         if (isLastPage) {
@@ -196,13 +191,13 @@ fun GuideScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(52.dp),
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = currentPage.bgColor)
                 ) {
                     Text(
                         text = if (isLastPage) "Ayo Mulai!" else "Selanjutnya",
                         style = MaterialTheme.typography.titleMedium,
-                        color = Color.White
+                        color = Ivory
                     )
                 }
             }
@@ -218,27 +213,24 @@ private fun GuidePage(page: GuidePage, bgColor: Color) {
             .padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Title block
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
                 text = page.subtitle,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.labelLarge,
                 color = bgColor
             )
             Text(
                 text = page.title,
                 style = MaterialTheme.typography.displaySmall,
-                color = Color.Black
+                color = AnthropicNearBlack
             )
             Text(
                 text = page.description,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.DarkGray,
-                lineHeight = 20.sp
+                color = OliveGray
             )
         }
 
-        // Steps
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             page.steps.forEach { step ->
                 GuideStepRow(step = step, accentColor = bgColor)
@@ -263,16 +255,15 @@ private fun GuideStepRow(step: GuideStep, accentColor: Color) {
             Text(
                 text = step.number.toString(),
                 style = MaterialTheme.typography.labelLarge,
-                color = Color.White,
+                color = Ivory,
                 textAlign = TextAlign.Center
             )
         }
         Text(
             text = step.text,
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.DarkGray,
-            modifier = Modifier.padding(top = 4.dp),
-            lineHeight = 20.sp
+            color = OliveGray,
+            modifier = Modifier.padding(top = 4.dp)
         )
     }
 }

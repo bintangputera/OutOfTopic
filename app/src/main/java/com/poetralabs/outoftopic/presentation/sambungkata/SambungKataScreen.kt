@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -50,18 +49,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.poetralabs.outoftopic.core.theme.BackgroundWhite
-import com.poetralabs.outoftopic.core.theme.DarkMintGreen
-import com.poetralabs.outoftopic.core.theme.MintGreen
+import com.poetralabs.outoftopic.core.theme.AnthropicNearBlack
+import com.poetralabs.outoftopic.core.theme.BorderCream
+import com.poetralabs.outoftopic.core.theme.DarkGameColor
+import com.poetralabs.outoftopic.core.theme.ErrorCrimson
+import com.poetralabs.outoftopic.core.theme.GameColor
+import com.poetralabs.outoftopic.core.theme.Ivory
+import com.poetralabs.outoftopic.core.theme.OliveGray
+import com.poetralabs.outoftopic.core.theme.Parchment
+import com.poetralabs.outoftopic.core.theme.RingWarm
+import com.poetralabs.outoftopic.core.theme.StoneGray
+import com.poetralabs.outoftopic.core.theme.TerracottaBrand
+import com.poetralabs.outoftopic.core.theme.WarmSand
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -85,7 +91,6 @@ fun SambungKataScreen(
     var inputWord by remember { mutableStateOf("") }
     var showAddPlayerDialog by remember { mutableStateOf(false) }
 
-    // Clear input on turn advance
     LaunchedEffect(currentPlayerIndex, gamePhase) {
         inputWord = ""
     }
@@ -101,7 +106,7 @@ fun SambungKataScreen(
     }
 
     Scaffold(
-        containerColor = BackgroundWhite,
+        containerColor = Parchment,
         topBar = {
             Row(
                 modifier = Modifier
@@ -117,7 +122,7 @@ fun SambungKataScreen(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Kembali",
-                        tint = Color.Black
+                        tint = AnthropicNearBlack
                     )
                 }
             }
@@ -134,18 +139,18 @@ fun SambungKataScreen(
                             onClick = { viewModel.startGame() },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(56.dp),
-                            shape = RoundedCornerShape(16.dp),
+                                .height(52.dp),
+                            shape = RoundedCornerShape(12.dp),
                             enabled = players.size >= 2,
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = MintGreen,
-                                disabledContainerColor = Color.LightGray
+                                containerColor = GameColor,
+                                disabledContainerColor = WarmSand
                             )
                         ) {
                             Text(
                                 text = if (players.size < 2) "Tambah min. 2 pemain" else "Mulai Permainan!",
-                                style = MaterialTheme.typography.titleLarge,
-                                color = Color.White
+                                style = MaterialTheme.typography.titleMedium,
+                                color = if (players.size >= 2) Ivory else StoneGray
                             )
                         }
                     }
@@ -154,8 +159,8 @@ fun SambungKataScreen(
                         AnimatedVisibility(visible = error != null) {
                             Text(
                                 text = error ?: "",
-                                color = Color(0xFFE53935),
-                                style = MaterialTheme.typography.titleMedium,
+                                color = ErrorCrimson,
+                                style = MaterialTheme.typography.bodySmall,
                                 modifier = Modifier.padding(bottom = 6.dp)
                             )
                         }
@@ -168,18 +173,19 @@ fun SambungKataScreen(
                             placeholder = {
                                 Text(
                                     "Ketik kata yang dimulai '${nextLetter ?: "?"}'...",
-                                    style = MaterialTheme.typography.bodyMedium
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = StoneGray
                                 )
                             },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(16.dp),
+                            shape = RoundedCornerShape(12.dp),
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = MintGreen,
-                                unfocusedBorderColor = Color.LightGray,
-                                focusedTextColor = Color.Black,
-                                unfocusedTextColor = Color.Black,
-                                cursorColor = MintGreen
+                                focusedBorderColor = GameColor,
+                                unfocusedBorderColor = RingWarm,
+                                focusedTextColor = AnthropicNearBlack,
+                                unfocusedTextColor = AnthropicNearBlack,
+                                cursorColor = GameColor
                             ),
                             keyboardOptions = KeyboardOptions(
                                 imeAction = ImeAction.Done,
@@ -194,14 +200,14 @@ fun SambungKataScreen(
                             onClick = { viewModel.submitWord(inputWord) },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(56.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = MintGreen)
+                                .height(52.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = GameColor)
                         ) {
                             Text(
-                                text = "Kirim →",
-                                style = MaterialTheme.typography.titleLarge,
-                                color = Color.White
+                                text = "Kirim",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Ivory
                             )
                         }
                     }
@@ -211,14 +217,14 @@ fun SambungKataScreen(
                             onClick = { viewModel.resetGame() },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(56.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = MintGreen)
+                                .height(52.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = GameColor)
                         ) {
                             Text(
                                 text = "Main Lagi",
-                                style = MaterialTheme.typography.titleLarge,
-                                color = Color.White
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Ivory
                             )
                         }
                     }
@@ -237,13 +243,13 @@ fun SambungKataScreen(
 
             Text(
                 text = "Sambung Kata",
-                style = MaterialTheme.typography.headlineSmall,
-                color = Color.Black
+                style = MaterialTheme.typography.headlineMedium,
+                color = AnthropicNearBlack
             )
             Text(
                 text = "Sambung kata dari huruf terakhir!",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
+                color = OliveGray,
                 textAlign = TextAlign.Center
             )
 
@@ -264,14 +270,13 @@ fun SambungKataScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "🔗", style = MaterialTheme.typography.displayLarge)
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
                                 text = if (players.isEmpty()) "Tambah pemain untuk mulai!"
                                 else if (players.size == 1) "Butuh 1 pemain lagi!"
                                 else "Siap! Tekan mulai.",
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = Color.Gray,
+                                color = OliveGray,
                                 textAlign = TextAlign.Center
                             )
                         }
@@ -296,12 +301,12 @@ fun SambungKataScreen(
                     ) {
                         Surface(
                             shape = RoundedCornerShape(12.dp),
-                            color = Color(0xFFFFEBEE)
+                            color = ErrorCrimson.copy(alpha = 0.1f)
                         ) {
                             Text(
-                                text = "❌ $justEliminated kehabisan waktu!",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = Color(0xFFE53935),
+                                text = "$justEliminated kehabisan waktu!",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = ErrorCrimson,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                             )
                         }
@@ -312,39 +317,38 @@ fun SambungKataScreen(
                     Text(
                         text = "Giliran $currentPlayer",
                         style = MaterialTheme.typography.titleMedium,
-                        color = MintGreen,
+                        color = GameColor,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Timer circle with next letter
+                    // Timer circle
                     Box(contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(
                             progress = { timeLeft.toFloat() / SambungKataViewModel.TURN_DURATION },
                             modifier = Modifier.size(120.dp),
                             strokeWidth = 8.dp,
-                            color = if (timeLeft <= 3) Color(0xFFE53935) else MintGreen,
-                            trackColor = Color(0xFFE0E0E0),
+                            color = if (timeLeft <= 3) ErrorCrimson else GameColor,
+                            trackColor = WarmSand,
                             strokeCap = StrokeCap.Round
                         )
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
                                 text = "huruf",
                                 style = MaterialTheme.typography.labelMedium,
-                                color = Color.Gray
+                                color = StoneGray
                             )
                             Text(
                                 text = nextLetter?.toString() ?: "?",
                                 style = MaterialTheme.typography.displayLarge,
-                                color = if (timeLeft <= 3) Color(0xFFE53935) else DarkMintGreen,
-                                fontWeight = FontWeight.Bold
+                                color = if (timeLeft <= 3) ErrorCrimson else DarkGameColor
                             )
                             Text(
                                 text = "$timeLeft",
                                 style = MaterialTheme.typography.labelMedium,
-                                color = Color.Gray
+                                color = StoneGray
                             )
                         }
                     }
@@ -353,19 +357,17 @@ fun SambungKataScreen(
 
                     Text(
                         text = "Kata sebelumnya:",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray
+                        style = MaterialTheme.typography.bodySmall,
+                        color = StoneGray
                     )
                     Text(
                         text = lastWord ?: "",
                         style = MaterialTheme.typography.headlineMedium,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold
+                        color = AnthropicNearBlack
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Word chain history
                     WordChainRow(wordChain = wordChain)
                 }
 
@@ -377,24 +379,22 @@ fun SambungKataScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(text = "🏆", style = MaterialTheme.typography.displayLarge)
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = winner ?: "",
-                                style = MaterialTheme.typography.headlineMedium,
-                                color = DarkMintGreen,
-                                fontWeight = FontWeight.Bold
+                                style = MaterialTheme.typography.displaySmall,
+                                color = DarkGameColor
                             )
                             Text(
                                 text = "Menang!",
-                                style = MaterialTheme.typography.titleLarge,
-                                color = Color.Black
+                                style = MaterialTheme.typography.headlineSmall,
+                                color = AnthropicNearBlack
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
                                 text = "${wordChain.size} kata berhasil dibuat",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Gray
+                                color = OliveGray
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             WordChainRow(wordChain = wordChain)
@@ -421,13 +421,13 @@ private fun WordChainRow(wordChain: List<String>) {
     ) {
         items(wordChain) { word ->
             Surface(
-                shape = RoundedCornerShape(20.dp),
-                color = MintGreen.copy(alpha = 0.15f)
+                shape = RoundedCornerShape(16.dp),
+                color = GameColor.copy(alpha = 0.12f)
             ) {
                 Text(
                     text = word,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = DarkMintGreen,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = DarkGameColor,
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                 )
             }
@@ -453,23 +453,23 @@ private fun SetupPlayerSection(
                 selected = false,
                 onClick = {},
                 label = {
-                    Text(name, style = MaterialTheme.typography.titleMedium)
+                    Text(name, style = MaterialTheme.typography.labelLarge)
                 },
                 trailingIcon = {
                     Text(
-                        text = "×",
+                        text = "x",
                         modifier = Modifier.clickable { onRemovePlayer(index) },
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.Black
+                        style = MaterialTheme.typography.labelLarge,
+                        color = AnthropicNearBlack
                     )
                 },
-                colors = InputChipDefaults.inputChipColors(labelColor = Color.Black)
+                colors = InputChipDefaults.inputChipColors(labelColor = AnthropicNearBlack)
             )
         }
         SuggestionChip(
             onClick = onAddPlayer,
             label = {
-                Text("+ Pemain", style = MaterialTheme.typography.titleMedium, color = Color.Black)
+                Text("+ Pemain", style = MaterialTheme.typography.labelLarge, color = AnthropicNearBlack)
             }
         )
     }
@@ -494,26 +494,26 @@ private fun ActivePlayerSection(
                 selected = isCurrent,
                 onClick = {},
                 label = {
-                    Text(name, style = MaterialTheme.typography.titleMedium)
+                    Text(name, style = MaterialTheme.typography.labelLarge)
                 },
                 colors = InputChipDefaults.inputChipColors(
-                    selectedContainerColor = MintGreen,
-                    selectedLabelColor = Color.White,
-                    labelColor = Color.Black
+                    selectedContainerColor = GameColor,
+                    selectedLabelColor = Ivory,
+                    labelColor = AnthropicNearBlack
                 )
             )
         }
         eliminatedPlayers.forEach { name ->
             Surface(
                 shape = RoundedCornerShape(8.dp),
-                color = Color(0xFFF5F5F5)
+                color = WarmSand
             ) {
                 Text(
                     text = name,
-                    style = MaterialTheme.typography.titleMedium.copy(
+                    style = MaterialTheme.typography.labelLarge.copy(
                         textDecoration = TextDecoration.LineThrough
                     ),
-                    color = Color.LightGray,
+                    color = StoneGray,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                 )
             }
@@ -530,12 +530,12 @@ private fun AddPlayerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = Color.White,
+        containerColor = Ivory,
         title = {
             Text(
                 "Tambah Pemain",
                 style = MaterialTheme.typography.headlineSmall,
-                color = Color.Black
+                color = AnthropicNearBlack
             )
         },
         text = {
@@ -543,14 +543,14 @@ private fun AddPlayerDialog(
                 value = name,
                 onValueChange = { name = it },
                 label = {
-                    Text("Nama pemain", style = MaterialTheme.typography.bodyMedium, color = Color.Black)
+                    Text("Nama pemain", style = MaterialTheme.typography.bodyMedium, color = OliveGray)
                 },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MintGreen,
-                    focusedTextColor = Color.Black,
-                    cursorColor = MintGreen
+                    focusedBorderColor = GameColor,
+                    focusedTextColor = AnthropicNearBlack,
+                    cursorColor = GameColor
                 ),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = {
@@ -560,12 +560,12 @@ private fun AddPlayerDialog(
         },
         confirmButton = {
             TextButton(onClick = { if (name.isNotBlank()) onAdd(name.trim()) }) {
-                Text("Tambah", style = MaterialTheme.typography.titleMedium, color = MintGreen)
+                Text("Tambah", style = MaterialTheme.typography.titleMedium, color = GameColor)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Batal", style = MaterialTheme.typography.titleMedium, color = Color.Gray)
+                Text("Batal", style = MaterialTheme.typography.titleMedium, color = StoneGray)
             }
         }
     )

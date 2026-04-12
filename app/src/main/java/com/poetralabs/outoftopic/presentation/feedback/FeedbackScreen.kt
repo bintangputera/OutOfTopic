@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -43,11 +42,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.poetralabs.outoftopic.core.theme.BackgroundWhite
-import com.poetralabs.outoftopic.core.theme.MintGreen
+import com.poetralabs.outoftopic.core.theme.AnthropicNearBlack
+import com.poetralabs.outoftopic.core.theme.Ivory
+import com.poetralabs.outoftopic.core.theme.OliveGray
+import com.poetralabs.outoftopic.core.theme.Parchment
+import com.poetralabs.outoftopic.core.theme.RingWarm
+import com.poetralabs.outoftopic.core.theme.StoneGray
+import com.poetralabs.outoftopic.core.theme.TerracottaBrand
+import com.poetralabs.outoftopic.core.theme.WarmSand
 import org.koin.androidx.compose.koinViewModel
 
 private val feedbackCategories = listOf(
@@ -58,7 +62,7 @@ private val feedbackCategories = listOf(
     "Kemudahan penggunaan"
 )
 
-private val ratingEmojis = listOf("😡", "😕", "😐", "🙂", "😄")
+private val ratingEmojis = listOf("1", "2", "3", "4", "5")
 
 @Composable
 fun FeedbackScreen(
@@ -77,17 +81,19 @@ fun FeedbackScreen(
                 viewModel.resetState()
                 onBack()
             },
-            containerColor = Color.White,
+            containerColor = Ivory,
             title = {
                 Text(
-                    "Terima kasih!", fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    "Terima kasih!",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = AnthropicNearBlack
                 )
             },
             text = {
                 Text(
                     "Feedback kamu sudah diterima. Kami akan terus membaik!",
-                    color = Color.Black
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = OliveGray
                 )
             },
             confirmButton = {
@@ -99,8 +105,7 @@ fun FeedbackScreen(
                 ) {
                     Text(
                         "OK",
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold,
+                        color = TerracottaBrand,
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
@@ -109,7 +114,7 @@ fun FeedbackScreen(
     }
 
     Scaffold(
-        containerColor = BackgroundWhite,
+        containerColor = Parchment,
         topBar = {
             Row(
                 modifier = Modifier
@@ -121,7 +126,7 @@ fun FeedbackScreen(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Kembali",
-                        tint = Color.Black
+                        tint = AnthropicNearBlack
                     )
                 }
             }
@@ -136,15 +141,14 @@ fun FeedbackScreen(
         ) {
             Text(
                 text = "Share Your Feedback",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
+                style = MaterialTheme.typography.headlineMedium,
+                color = AnthropicNearBlack
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Masukan kamu membantu kami membuat Out of Topic jadi lebih seru!",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
+                color = OliveGray
             )
 
             Spacer(modifier = Modifier.height(28.dp))
@@ -152,16 +156,15 @@ fun FeedbackScreen(
             // Rating
             Text(
                 text = "Seberapa puas kamu?",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.Black
+                style = MaterialTheme.typography.headlineSmall,
+                color = AnthropicNearBlack
             )
             Spacer(modifier = Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                ratingEmojis.forEachIndexed { index, emoji ->
+                ratingEmojis.forEachIndexed { index, label ->
                     val ratingValue = index + 1
                     val isSelected = rating == ratingValue
                     Surface(
@@ -169,14 +172,19 @@ fun FeedbackScreen(
                             .size(52.dp)
                             .clickable { rating = ratingValue },
                         shape = RoundedCornerShape(12.dp),
-                        color = if (isSelected) MintGreen.copy(alpha = 0.15f) else Color.Transparent,
+                        color = if (isSelected) TerracottaBrand.copy(alpha = 0.12f) else Color.Transparent,
                         border = BorderStroke(
                             width = if (isSelected) 1.5.dp else 1.dp,
-                            color = if (isSelected) MintGreen else Color.LightGray
+                            color = if (isSelected) TerracottaBrand else RingWarm
                         )
                     ) {
                         Box(contentAlignment = Alignment.Center) {
-                            Text(text = emoji, fontSize = 26.sp)
+                            Text(
+                                text = label,
+                                fontSize = 20.sp,
+                                style = MaterialTheme.typography.headlineSmall,
+                                color = if (isSelected) TerracottaBrand else OliveGray
+                            )
                         }
                     }
                 }
@@ -187,9 +195,8 @@ fun FeedbackScreen(
             // Categories
             Text(
                 text = "Apa yang kamu suka?",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.Black
+                style = MaterialTheme.typography.headlineSmall,
+                color = AnthropicNearBlack
             )
             Spacer(modifier = Modifier.height(4.dp))
             feedbackCategories.chunked(2).forEach { row ->
@@ -221,15 +228,15 @@ fun FeedbackScreen(
                                     }
                                 },
                                 colors = CheckboxDefaults.colors(
-                                    checkedColor = MintGreen,
-                                    checkmarkColor = Color.White,
-                                    uncheckedColor = Color.Gray
+                                    checkedColor = TerracottaBrand,
+                                    checkmarkColor = Ivory,
+                                    uncheckedColor = StoneGray
                                 )
                             )
                             Text(
                                 text = category,
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Black
+                                color = AnthropicNearBlack
                             )
                         }
                     }
@@ -244,9 +251,8 @@ fun FeedbackScreen(
             // Comment
             Text(
                 text = "Komentar tambahan (opsional)",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.Black
+                style = MaterialTheme.typography.headlineSmall,
+                color = AnthropicNearBlack
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
@@ -255,18 +261,18 @@ fun FeedbackScreen(
                 placeholder = {
                     Text(
                         text = "Ceritakan pengalaman atau saranmu di sini...",
-                        color = Color.LightGray,
+                        color = StoneGray,
                         style = MaterialTheme.typography.bodyMedium
                     )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp),
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MintGreen,
-                    unfocusedBorderColor = Color.LightGray,
-                    focusedTextColor = Color.Black
+                    focusedBorderColor = TerracottaBrand,
+                    unfocusedBorderColor = RingWarm,
+                    focusedTextColor = AnthropicNearBlack
                 ),
                 maxLines = 5
             )
@@ -294,24 +300,23 @@ fun FeedbackScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MintGreen,
-                    disabledContainerColor = MintGreen.copy(alpha = 0.4f)
+                    containerColor = TerracottaBrand,
+                    disabledContainerColor = TerracottaBrand.copy(alpha = 0.4f)
                 )
             ) {
                 if (submitState is FeedbackSubmitState.Loading) {
                     CircularProgressIndicator(
-                        color = Color.White,
+                        color = Ivory,
                         modifier = Modifier.size(20.dp),
                         strokeWidth = 2.dp
                     )
                 } else {
                     Text(
                         text = "Submit Feedback",
-                        color = Color.White,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                        fontSize = 16.sp
+                        color = Ivory,
+                        style = MaterialTheme.typography.titleMedium
                     )
                 }
             }
