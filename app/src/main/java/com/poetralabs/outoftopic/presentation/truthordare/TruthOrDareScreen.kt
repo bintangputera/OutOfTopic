@@ -49,7 +49,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.poetralabs.outoftopic.core.theme.AnthropicNearBlack
-import com.poetralabs.outoftopic.core.theme.DareColor
+import com.poetralabs.outoftopic.core.theme.DarkTaro
 import com.poetralabs.outoftopic.core.theme.ErrorCrimson
 import com.poetralabs.outoftopic.core.theme.Ivory
 import com.poetralabs.outoftopic.core.theme.OliveGray
@@ -216,8 +216,8 @@ fun TruthOrDareScreen(
                                 .height(80.dp),
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (dareSelected) DareColor else Ivory,
-                                contentColor = if (dareSelected) Ivory else DareColor
+                                containerColor = if (dareSelected) DarkTaro else Ivory,
+                                contentColor = if (dareSelected) Ivory else DarkTaro
                             ),
                             elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp),
                             border = if (!dareSelected) BorderStroke(1.dp, RingWarm) else null
@@ -244,7 +244,7 @@ fun TruthOrDareScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = when (selectedMode) {
                                 TodMode.TRUTH -> TruthColor
-                                TodMode.DARE -> DareColor
+                                TodMode.DARE -> DarkTaro
                                 null -> WarmSand
                             },
                             disabledContainerColor = WarmSand
@@ -304,7 +304,7 @@ fun TruthOrDareScreen(
                 val currentPlayer = players[currentPlayerIndex]
                 val activeColor = when (currentMode ?: selectedMode) {
                     TodMode.TRUTH -> TruthColor
-                    TodMode.DARE -> DareColor
+                    TodMode.DARE -> DarkTaro
                     null -> StoneGray
                 }
                 Text(
