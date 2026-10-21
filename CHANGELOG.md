@@ -9,7 +9,14 @@ Format: `[version] (versionCode) — release date`
 
 ### Added
 ### Changed
+- New visual identity: playing cards on kraft paper with retro print colors (red, blue, green, yellow) replacing the parchment/terracotta theme
+- Home, Truth or Dare, Random Question theme list, and question pager redesigned as playing cards
+- Instagram Story share image redesigned to match the card style
+- Random Question is now the first card on Home
+- App label renamed from "OutOfTopic" to "Out Of Topic"
+- Play Store title: "Out Of Topic: Game Nongkrong" (set in Play Console)
 ### Fixed
+- Random Question card flashing blank for a moment after swiping to the next question
 ### Removed
 
 ---

@@ -11,6 +11,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -49,8 +51,10 @@ import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import com.poetralabs.outoftopic.R
@@ -59,8 +63,10 @@ import androidx.navigation.NavController
 import com.poetralabs.outoftopic.core.theme.AnthropicNearBlack
 import com.poetralabs.outoftopic.core.theme.Ivory
 import com.poetralabs.outoftopic.core.theme.OliveGray
-import com.poetralabs.outoftopic.core.theme.Parchment
-import com.poetralabs.outoftopic.core.theme.TerracottaBrand
+import com.poetralabs.outoftopic.core.theme.paperBackground
+import com.poetralabs.outoftopic.core.theme.SerifFamily
+import com.poetralabs.outoftopic.core.theme.WajahKartu
+import com.poetralabs.outoftopic.presentation.component.PlayingCard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -68,6 +74,8 @@ import org.koin.androidx.compose.koinViewModel
 import java.io.File
 import java.io.FileOutputStream
 import kotlin.math.absoluteValue
+
+private val cardSuits = listOf("\u2660\uFE0E", "\u2665\uFE0E", "\u2666\uFE0E", "\u2663\uFE0E")
 
 @Composable
 fun QuestionScreen(
@@ -91,7 +99,8 @@ fun QuestionScreen(
     }
 
     Scaffold(
-        containerColor = Parchment,
+        containerColor = Color.Transparent,
+        modifier = Modifier.paperBackground(),
         topBar = {
             Box(
                 modifier = Modifier
@@ -203,30 +212,13 @@ fun QuestionScreen(
                                 },
                             contentAlignment = Alignment.Center
                         ) {
-                            Card(
-                                modifier = Modifier
-                                    .padding(horizontal = 32.dp)
-                                    .fillMaxHeight(0.75f),
-                                shape = RoundedCornerShape(16.dp),
-                                elevation = CardDefaults.cardElevation(4.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color(behindData.color)
-                                )
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(24.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = behindData.question?.question ?: "",
-                                        style = MaterialTheme.typography.headlineMedium,
-                                        textAlign = TextAlign.Center,
-                                        color = Color.White.copy(alpha = 0.7f)
-                                    )
-                                }
-                            }
+                            // Same face the card will have once it becomes the front card,
+                            // so nothing changes visually at the moment the swipe completes.
+                            QuestionCardFace(
+                                data = behindData,
+                                number = if (swipingToPrev) currentIndex - 1 else currentIndex + 1,
+                                onShare = {}
+                            )
                         }
 
                         // Front card
@@ -298,54 +290,16 @@ fun QuestionScreen(
                                 },
                             contentAlignment = Alignment.Center
                         ) {
-                            Card(
-                                modifier = Modifier
-                                    .padding(horizontal = 32.dp)
-                                    .fillMaxHeight(0.75f),
-                                shape = RoundedCornerShape(16.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = questions.getOrNull(0)?.let { Color(it.color) }
-                                        ?: Color.Transparent
-                                )
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(24.dp)
-                                ) {
-                                    Text(
-                                        text = questions.getOrNull(0)?.question?.question ?: "",
-                                        style = MaterialTheme.typography.headlineMedium,
-                                        textAlign = TextAlign.Center,
-                                        color = Color.White,
-                                        modifier = Modifier.align(Alignment.Center)
-                                    )
-                                    Button(
-                                        onClick = {
-                                            val questionText =
-                                                questions.getOrNull(0)?.question?.question
-                                                    ?: return@Button
-                                            scope.launch {
-                                                shareQuestionToInstagram(context, questionText)
-                                            }
-                                        },
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(48.dp)
-                                            .align(Alignment.BottomCenter),
-                                        shape = RoundedCornerShape(12.dp),
-                                        colors = ButtonDefaults.buttonColors(
-                                            containerColor = Color.White.copy(alpha = 0.25f),
-                                            contentColor = Color.White
-                                        )
-                                    ) {
-                                        Text(
-                                            text = "Share ke Instagram",
-                                            style = MaterialTheme.typography.titleMedium
-                                        )
+                            QuestionCardFace(
+                                data = questions[0],
+                                number = currentIndex,
+                                onShare = {
+                                    val questionText = questions[0].question.question
+                                    scope.launch {
+                                        shareQuestionToInstagram(context, questionText)
                                     }
                                 }
-                            }
+                            )
                         }
                     }
 
@@ -366,6 +320,52 @@ fun QuestionScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun QuestionCardFace(
+    data: QuestionWithColor,
+    number: Int,
+    onShare: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val color = Color(data.color)
+    PlayingCard(
+        color = color,
+        rank = number.toString(),
+        suit = cardSuits[number.mod(cardSuits.size)],
+        tilt = -1f,
+        modifier = modifier
+            .fillMaxWidth(0.86f)
+            .aspectRatio(0.72f)
+    ) {
+        Text(
+            text = data.question.question,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontFamily = SerifFamily,
+                fontWeight = FontWeight.Medium,
+                fontSize = 24.sp,
+                lineHeight = 32.sp
+            ),
+            textAlign = TextAlign.Center,
+            color = AnthropicNearBlack
+        )
+        OutlinedButton(
+            onClick = onShare,
+            modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .height(44.dp)
+                .align(Alignment.BottomCenter),
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.5.dp, color),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = color)
+        ) {
+            Text(
+                text = "Share ke Instagram",
+                style = MaterialTheme.typography.titleMedium
+            )
         }
     }
 }
@@ -410,62 +410,139 @@ private suspend fun shareQuestionToInstagram(context: Context, questionText: Str
 }
 
 /**
- * Generates a 1080x1920 Instagram Story image with warm Anthropic-inspired styling.
+ * Generates a 1080x1920 Instagram Story image: a tilted playing card on kraft paper,
+ * with the same print palette and Bebas/Playfair type as the app.
  */
 private fun createStoryTemplate(context: Context, questionText: String): Bitmap {
     val W = 1080
     val H = 1920
     val bmp = Bitmap.createBitmap(W, H, Bitmap.Config.ARGB_8888)
     val canvas = android.graphics.Canvas(bmp)
-    // Parchment background
-    canvas.drawColor(0xFFF5F4ED.toInt())
 
-    val playfairBold = ResourcesCompat.getFont(context, R.font.playfair_display_bold)
+    val ink = 0xFF2B211B.toInt()
+    val red = 0xFFD4412F.toInt()
+    val cardFace = 0xFFF8EFD8.toInt()
+    val cardLine = 0xFFD9C79F.toInt()
+    val bodyGray = 0xFF6B5B4D.toInt()
+
+    val bebas = ResourcesCompat.getFont(context, R.font.bebasneue_regular)
+        ?: Typeface.create("sans-serif-condensed", Typeface.BOLD)
     val playfairMedium = ResourcesCompat.getFont(context, R.font.playfair_display_medium)
+        ?: Typeface.create("serif", Typeface.NORMAL)
     val playfairReg = ResourcesCompat.getFont(context, R.font.playfair_display_regular)
+        ?: Typeface.create("serif", Typeface.NORMAL)
 
-    // App logo — serif style
+    // Kraft paper: base color, fiber specks, and a darker edge.
+    canvas.drawColor(0xFFEADDBF.toInt())
+    val random = kotlin.random.Random(7)
+    val speckPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    repeat(700) {
+        speckPaint.color = ink
+        speckPaint.alpha = (10 + random.nextInt(18))
+        canvas.drawCircle(
+            random.nextFloat() * W,
+            random.nextFloat() * H,
+            1.2f + random.nextFloat() * 2.4f,
+            speckPaint
+        )
+    }
+    val vignette = Paint().apply {
+        shader = android.graphics.RadialGradient(
+            W / 2f, H / 2f, H * 0.75f,
+            intArrayOf(0x00000000, 0x1A2B211B),
+            floatArrayOf(0.55f, 1f),
+            android.graphics.Shader.TileMode.CLAMP
+        )
+    }
+    canvas.drawRect(0f, 0f, W.toFloat(), H.toFloat(), vignette)
+
+    // Title: printed twice with a small offset, like a misregistered offset print.
     val titlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = 0xFF141413.toInt()
-        textSize = W * 0.12f
-        typeface = playfairMedium ?: Typeface.create("serif", Typeface.NORMAL)
+        textSize = W * 0.17f
+        typeface = bebas
         textAlign = Paint.Align.CENTER
     }
-    canvas.drawText("Out of", W / 2f, H * 0.135f, titlePaint)
-    canvas.drawText("Topic", W / 2f, H * 0.200f, titlePaint)
+    listOf(red to 7f, ink to 0f).forEach { (color, offset) ->
+        titlePaint.color = color
+        canvas.drawText("OUT OF", W / 2f + offset, H * 0.118f + offset, titlePaint)
+        canvas.drawText("TOPIC", W / 2f + offset, H * 0.205f + offset, titlePaint)
+    }
 
     val taglinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = 0xFF5E5D59.toInt()
-        textSize = W * 0.034f
-        typeface = Typeface.create(playfairReg ?: Typeface.create("serif", Typeface.NORMAL), Typeface.ITALIC)
+        color = bodyGray
+        textSize = W * 0.036f
+        typeface = Typeface.create(playfairReg, Typeface.ITALIC)
         textAlign = Paint.Align.CENTER
     }
     canvas.drawText(
         "\u201CBukan gak nyambung, cuma Out Of Topic.\u201D",
         W / 2f,
-        H * 0.240f,
+        H * 0.250f,
         taglinePaint
     )
 
-    // Question card with terracotta border
-    val cardL = W * 0.074f
-    val cardR = W * 0.926f
-    val cardT = H * 0.285f
-    val cardB = H * 0.620f
-    val cardRadius = 40f
+    // Playing card, tilted slightly around its center.
+    val cardL = W * 0.10f
+    val cardR = W * 0.90f
+    val cardT = H * 0.295f
+    val cardB = H * 0.735f
+    val cardRect = RectF(cardL, cardT, cardR, cardB)
+    canvas.save()
+    canvas.rotate(-2.2f, W / 2f, (cardT + cardB) / 2f)
 
-    val cardBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = 0xFFC96442.toInt() // Terracotta
-        style = Paint.Style.STROKE
-        strokeWidth = 7f
+    val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = cardFace
+        setShadowLayer(36f, 0f, 16f, 0x552B211B)
     }
-    canvas.drawRoundRect(RectF(cardL, cardT, cardR, cardB), cardRadius, cardRadius, cardBorderPaint)
+    canvas.drawRoundRect(cardRect, 56f, 56f, shadowPaint)
+    val facePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { color = cardFace }
+    canvas.drawRoundRect(cardRect, 56f, 56f, facePaint)
+    val edgePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = cardLine
+        style = Paint.Style.STROKE
+        strokeWidth = 3f
+    }
+    canvas.drawRoundRect(cardRect, 56f, 56f, edgePaint)
+    val framePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = red
+        alpha = 140
+        style = Paint.Style.STROKE
+        strokeWidth = 6f
+    }
+    val inset = 30f
+    canvas.drawRoundRect(
+        RectF(cardL + inset, cardT + inset, cardR - inset, cardB - inset),
+        38f, 38f, framePaint
+    )
+
+    // Corner index: rank and suit top-left, mirrored bottom-right.
+    val rankPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = red
+        textSize = 92f
+        typeface = bebas
+        textAlign = Paint.Align.CENTER
+    }
+    val suitPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = red
+        textSize = 72f
+        typeface = Typeface.DEFAULT
+        textAlign = Paint.Align.CENTER
+    }
+    val idxX = cardL + 98f
+    val idxY = cardT + 150f
+    canvas.drawText("Q", idxX, idxY, rankPaint)
+    canvas.drawText("\u2666\uFE0E", idxX, idxY + 78f, suitPaint)
+    canvas.save()
+    canvas.rotate(180f, W / 2f, (cardT + cardB) / 2f)
+    canvas.drawText("Q", idxX, idxY, rankPaint)
+    canvas.drawText("♦︎", idxX, idxY + 78f, suitPaint)
+    canvas.restore()
 
     // Question text
     val qPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = 0xFF141413.toInt()
-        textSize = W * 0.053f
-        typeface = Typeface.create(playfairMedium ?: Typeface.create("serif", Typeface.NORMAL), Typeface.NORMAL)
+        color = ink
+        textSize = W * 0.056f
+        typeface = playfairMedium
         textAlign = Paint.Align.CENTER
     }
     drawCenteredMultilineText(
@@ -473,41 +550,42 @@ private fun createStoryTemplate(context: Context, questionText: String): Bitmap 
         text = questionText,
         paint = qPaint,
         centerX = W / 2f,
-        areaTop = cardT + H * 0.018f,
-        areaBottom = cardT + (cardB - cardT) * 0.54f,
-        maxWidth = (cardR - cardL) - W * 0.18f
+        areaTop = cardT + H * 0.045f,
+        areaBottom = cardT + (cardB - cardT) * 0.58f,
+        maxWidth = (cardR - cardL) - W * 0.26f
     )
 
-    // "Jawaban Kamu:" label
+    // "Jawaban Kamu:" label and empty answer box
     val labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = 0xFF5E5D59.toInt()
-        textSize = W * 0.036f
-        typeface = playfairReg ?: Typeface.create("serif", Typeface.NORMAL)
+        color = bodyGray
+        textSize = W * 0.038f
+        typeface = Typeface.create(playfairReg, Typeface.ITALIC)
         textAlign = Paint.Align.LEFT
     }
-    val innerPad = W * 0.065f
-    val labelY = cardT + (cardB - cardT) * 0.655f
-    canvas.drawText("Jawaban Kamu:", cardL + innerPad, labelY, labelPaint)
-
-    // Empty answer box
+    val innerPad = W * 0.115f
+    val labelY = cardT + (cardB - cardT) * 0.665f
+    canvas.drawText("Jawaban kamu:", cardL + innerPad, labelY, labelPaint)
     val answerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = 0xFFE8E6DC.toInt() // BorderWarm
+        color = ink
+        alpha = 90
         style = Paint.Style.STROKE
-        strokeWidth = 5f
+        strokeWidth = 4f
+        pathEffect = android.graphics.DashPathEffect(floatArrayOf(18f, 12f), 0f)
     }
     canvas.drawRoundRect(
-        RectF(cardL + innerPad, labelY + H * 0.008f, cardR - innerPad, cardB - H * 0.022f),
-        22f, 22f, answerPaint
+        RectF(cardL + innerPad, labelY + H * 0.012f, cardR - innerPad, cardB - H * 0.095f),
+        26f, 26f, answerPaint
     )
+    canvas.restore()
 
     // Bottom branding
     val brandPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = 0xFF141413.toInt()
-        textSize = W * 0.058f
-        typeface = Typeface.create(playfairMedium ?: Typeface.create("serif", Typeface.NORMAL), Typeface.NORMAL)
+        color = ink
+        textSize = W * 0.085f
+        typeface = bebas
         textAlign = Paint.Align.CENTER
     }
-    canvas.drawText("OutOfTopic", W / 2f, H * 0.856f, brandPaint)
+    canvas.drawText("OUT OF TOPIC", W / 2f, H * 0.846f, brandPaint)
 
     // Google Play badge
     runCatching {
