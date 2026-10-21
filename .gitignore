@@ -16,3 +16,7 @@
 local.properties
 .hotswan/
 *.aab
+
+# Signing keys
+*.jks
+*.keystore

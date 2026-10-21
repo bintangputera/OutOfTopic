@@ -33,11 +33,9 @@ class QuestionViewModel(
     private val _previousQuestion = MutableStateFlow<QuestionWithColor?>(null)
     val previousQuestion = _previousQuestion.asStateFlow()
 
+    // Warna cetak untuk aksen kartu: merah cabe, biru laut, hijau daun, ungu tua, oker.
     private val colors = listOf(
-        0xFFE57373, 0xFFF06292, 0xFFBA68C8, 0xFF9575CD,
-        0xFF7986CB, 0xFF64B5F6, 0xFF4FC3F7, 0xFF4DD0E1,
-        0xFF4DB6AC, 0xFF81C784, 0xFFAED581, 0xFFFFD54F,
-        0xFFFFB74D, 0xFFFF8A65
+        0xFFD4412F, 0xFF2D5F8A, 0xFF3B7A57, 0xFF7A3F6E, 0xFFC7761E
     )
 
     fun getAllQuestion(themeId: String) {
