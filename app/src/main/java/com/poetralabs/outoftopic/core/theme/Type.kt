@@ -62,25 +62,25 @@ val Typography = Typography(
         letterSpacing = 0.sp
     ),
     headlineLarge = TextStyle(
-        fontFamily = SerifFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 28.sp,
-        lineHeight = 31.sp,       // ~1.10
-        letterSpacing = 0.sp
+        fontFamily = BebasNeue,
+        fontWeight = FontWeight.Normal,
+        fontSize = 34.sp,
+        lineHeight = 36.sp,
+        letterSpacing = 0.5.sp
     ),
     headlineMedium = TextStyle(
-        fontFamily = SerifFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 24.sp,
-        lineHeight = 29.sp,       // ~1.20
-        letterSpacing = 0.sp
+        fontFamily = BebasNeue,
+        fontWeight = FontWeight.Normal,
+        fontSize = 28.sp,
+        lineHeight = 30.sp,
+        letterSpacing = 0.5.sp
     ),
     headlineSmall = TextStyle(
-        fontFamily = SerifFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 20.sp,
-        lineHeight = 24.sp,       // ~1.20
-        letterSpacing = 0.sp
+        fontFamily = BebasNeue,
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp,
+        lineHeight = 26.sp,
+        letterSpacing = 0.5.sp
     ),
     // ── Serif Body ───────────────────────────────────────────────────────────
     bodyLarge = TextStyle(

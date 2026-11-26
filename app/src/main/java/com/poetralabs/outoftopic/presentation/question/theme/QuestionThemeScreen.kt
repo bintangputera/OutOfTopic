@@ -22,12 +22,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.poetralabs.outoftopic.core.data.local.entity.ThemeEntity
 import com.poetralabs.outoftopic.core.theme.AnthropicNearBlack
 import com.poetralabs.outoftopic.core.theme.OliveGray
-import com.poetralabs.outoftopic.core.theme.Parchment
+import com.poetralabs.outoftopic.core.theme.paperBackground
 import com.poetralabs.outoftopic.presentation.component.ThemeCard
 import org.koin.androidx.compose.koinViewModel
 
@@ -41,7 +43,8 @@ fun QuestionThemeScreen(
     val themes by viewModel.themes.collectAsState()
 
     Scaffold(
-        containerColor = Parchment,
+        containerColor = Color.Transparent,
+        modifier = Modifier.paperBackground(),
         topBar = {
             Row(
                 modifier = Modifier
@@ -73,22 +76,23 @@ fun QuestionThemeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Pertanyaan Random",
-                style = MaterialTheme.typography.headlineMedium,
+                text = "PERTANYAAN RANDOM",
+                style = MaterialTheme.typography.headlineLarge,
                 color = AnthropicNearBlack
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Bikin obrolan makin seru dengan pertanyaan random.",
-                style = MaterialTheme.typography.bodyMedium,
+                text = "Pilih satu kartu tema, lalu mulai ngobrol.",
+                style = MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic),
                 color = OliveGray,
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(24.dp))
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(20.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(vertical = 8.dp)
             ) {
                 itemsIndexed(themes) { index, theme ->
                     ThemeCard(
